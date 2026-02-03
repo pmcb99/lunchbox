@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lunchbox"
+version = "0.8.0"
+description = "Database version control for teams"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.scripts]
+lunchbox = "lunchbox_cli.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["lunchbox_cli*"]
+
+# For older pip editable install
+[tool.setuptools.package-dir]
+"" = "."

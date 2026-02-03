@@ -1,0 +1,2 @@
+[console_scripts]
+lunchbox = lunchbox_cli.main:main

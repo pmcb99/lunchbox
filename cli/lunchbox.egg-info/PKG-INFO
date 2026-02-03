@@ -1,0 +1,27 @@
+Metadata-Version: 2.4
+Name: lunchbox
+Version: 0.8.0
+Summary: Database version control for teams
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+
+# Lunchbox CLI
+
+CLI for Lunchbox (database version control). Install locally in editable mode:
+
+```bash
+# From repo root
+pip install -e ./cli
+
+# Or from lunchbox/lunchbox with venv activated
+pip install -e ../../cli
+```
+
+Then ensure `LUNCHBOX_API_KEY` is set (e.g. in `.env`) and run:
+
+- `lunchbox --version`
+- `lunchbox sync ./path/to/db.db`
+- `lunchbox revisions ./path/to/db.db`
+- `lunchbox restore ./path/to/db.db --output restored.db`
+
+This package is a stub; replace the logic in `lunchbox_cli/main.py` with real API calls when the backend is available.
