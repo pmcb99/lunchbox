@@ -1,4 +1,5 @@
 node_modules
+frontend/node_modules
 .venv
 .env
 .DS_Store
@@ -7,6 +8,5 @@ node_modules
 .pytest_cache
 .ruff_cache
 .mypy_cache
-.pytest_cache
-.ruff_cache
-.mypy_cache
+frontend/dist
+frontend/.vite
