@@ -48,6 +48,12 @@ ln -sf "$CONF" /etc/nginx/sites-enabled/lunchbox 2>/dev/null || true
 # Remove default site if it conflicts
 rm -f /etc/nginx/sites-enabled/default 2>/dev/null || true
 
+# So nginx (www-data) can read files under e.g. /home/admin/lunchbox/...
+if [[ "$REPO_DIR" == /home/* ]]; then
+  HOMEDIR="/$(echo "$REPO_DIR" | cut -d/ -f2-3)"
+  chmod o+x "$HOMEDIR" 2>/dev/null || true
+fi
+
 nginx -t
 systemctl reload nginx
 

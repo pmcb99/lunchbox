@@ -1,14 +1,20 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import { ArrowRight, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const subheadingRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
+  const imageWrapperRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
+  const badgeRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<HTMLCanvasElement>(null);
 
   // Particle animation
@@ -109,99 +115,60 @@ export function HeroSection() {
     };
   }, []);
 
-  // GSAP animations
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Heading animation
-      gsap.fromTo(
-        headingRef.current,
-        { opacity: 0, y: 60, rotateX: 15 },
-        { 
-          opacity: 1, 
-          y: 0, 
-          rotateX: 0, 
-          duration: 0.8, 
-          delay: 0.3,
-          ease: 'expo.out' 
-        }
-      );
+  // GSAP animations - useGSAP handles React 18 StrictMode properly
+  useGSAP(() => {
+    // Floating animation for image (subtle bob effect)
+    gsap.to(imageRef.current, {
+      y: -20,
+      duration: 3,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+    });
 
-      // Subheading animation
-      gsap.fromTo(
-        subheadingRef.current,
-        { opacity: 0, y: 30 },
-        { 
-          opacity: 1, 
-          y: 0, 
-          duration: 0.6, 
-          delay: 0.8,
-          ease: 'expo.out' 
-        }
-      );
+    // Badge floating animation (using GSAP to preserve translateZ)
+    gsap.to(badgeRef.current, {
+      y: -10,
+      duration: 2,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+    });
 
-      // CTA animation
-      gsap.fromTo(
-        ctaRef.current,
-        { opacity: 0, scale: 0.9 },
-        { 
-          opacity: 1, 
-          scale: 1, 
-          duration: 0.5, 
-          delay: 1,
-          ease: 'back.out(1.7)' 
-        }
-      );
+    // Scroll-triggered parallax on heading
+    gsap.to(headingRef.current, {
+      y: -30,
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top top',
+        end: '60% top',
+        scrub: true,
+        invalidateOnRefresh: true,
+      },
+    });
 
-      // Image animation
-      gsap.fromTo(
-        imageRef.current,
-        { opacity: 0, z: -200, rotateY: -30, rotateX: 10 },
-        { 
-          opacity: 1, 
-          z: 50, 
-          rotateY: -5, 
-          rotateX: 3, 
-          duration: 1.2, 
-          delay: 0.6,
-          ease: 'expo.out' 
-        }
-      );
+    // Scroll-triggered parallax on image wrapper (separate from floating animation)
+    gsap.to(imageWrapperRef.current, {
+      y: -100,
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top top',
+        end: '50% top',
+        scrub: 0.5,
+      },
+    });
 
-      // Floating animation for image
-      gsap.to(imageRef.current, {
-        y: -20,
-        duration: 3,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-      });
-
-      // Scroll-triggered parallax
-      gsap.to(headingRef.current, {
-        y: -30,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: '60% top',
-          scrub: true,
-          invalidateOnRefresh: true,
-        },
-      });
-
-      gsap.to(imageRef.current, {
-        y: -100,
-        rotateY: 10,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: '50% top',
-          scrub: 0.5,
-        },
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+    // Scroll-triggered rotation on inner image
+    gsap.to(imageRef.current, {
+      rotateY: 10,
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top top',
+        end: '50% top',
+        scrub: 0.5,
+      },
+    });
+  }, { scope: sectionRef, dependencies: [] });
 
   return (
     <section
@@ -229,7 +196,7 @@ export function HeroSection() {
 
       {/* Content */}
       <div className="relative z-10 w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-20">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center min-h-[calc(100vh-80px)]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center min-h-[calc(100vh-80px)]">
           {/* Left Column - Text */}
           <div className="flex flex-col justify-center">
             <div className="mb-8" style={{ minHeight: '120px' }}>
@@ -278,41 +245,43 @@ export function HeroSection() {
             className="relative flex items-center justify-center lg:justify-end"
             style={{ perspective: '1000px' }}
           >
+            {/* Wrapper for scroll parallax (y translation) */}
             <div
-              ref={imageRef}
+              ref={imageWrapperRef}
               className="relative w-full max-w-lg lg:max-w-xl"
-              style={{ 
-                transformStyle: 'preserve-3d',
-                transform: 'translateZ(50px) rotateY(-5deg) rotateX(3deg)',
-              }}
             >
-              {/* Glow Effect */}
-              <div 
-                className="absolute -inset-10 bg-[#ff6b35]/20 rounded-full blur-3xl opacity-50"
-                style={{ transform: 'translateZ(-50px)' }}
-              />
-              
-              {/* Image */}
-              <img
-                src="/hero-card.jpg"
-                alt="Lunchbox Backup Interface"
-                className="relative w-full h-auto rounded-2xl shadow-2xl"
-                style={{
-                  boxShadow: '0 50px 100px -20px rgba(0,0,0,0.8), 0 30px 60px -30px rgba(255,107,53,0.3)',
-                }}
-              />
-
-              {/* Floating Badge */}
-              <div 
-                className="absolute -bottom-4 -left-4 bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-3 shadow-xl"
+              {/* Inner element for floating animation and 3D transforms */}
+              <div
+                ref={imageRef}
+                className="relative"
                 style={{ 
-                  transform: 'translateZ(30px)',
-                  animation: 'float 4s ease-in-out infinite',
+                  transformStyle: 'preserve-3d',
                 }}
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full bg-[#4ade80] animate-pulse" />
-                  <span className="text-sm text-white font-medium">Synced 2 min ago</span>
+                {/* Glow Effect */}
+                <div 
+                  className="absolute -inset-10 bg-[#ff6b35]/20 rounded-full blur-3xl opacity-50"
+                />
+                
+                {/* Image */}
+                <img
+                  src="/hero-card.jpg"
+                  alt="Lunchbox Backup Interface"
+                  className="relative w-full h-auto rounded-2xl shadow-2xl"
+                  style={{
+                    boxShadow: '0 50px 100px -20px rgba(0,0,0,0.8), 0 30px 60px -30px rgba(255,107,53,0.3)',
+                  }}
+                />
+
+                {/* Floating Badge */}
+                <div 
+                  ref={badgeRef}
+                  className="absolute -bottom-4 -left-4 bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-3 shadow-xl"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 rounded-full bg-[#4ade80] animate-pulse" />
+                    <span className="text-sm text-white font-medium">Synced 2 min ago</span>
+                  </div>
                 </div>
               </div>
             </div>

@@ -1,6 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import { 
   RefreshCw, 
   Shield, 
@@ -9,7 +10,7 @@ import {
   GitBranch
 } from 'lucide-react';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const features = [
   {
@@ -41,100 +42,93 @@ export function FeaturesSection() {
   const satelliteRefs = useRef<(HTMLDivElement | null)[]>([]);
   const orbitPathRef = useRef<SVGSVGElement>(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Header animation
-      gsap.fromTo(
-        headerRef.current,
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: 'expo.out',
-          scrollTrigger: {
-            trigger: headerRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none reverse',
-          },
-        }
-      );
-
-      // Central card animation
-      gsap.fromTo(
-        centralCardRef.current,
-        { opacity: 0, rotateY: -90 },
-        {
-          opacity: 1,
-          rotateY: 0,
-          duration: 0.8,
-          delay: 0.2,
-          ease: 'expo.out',
-          scrollTrigger: {
-            trigger: centralCardRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none reverse',
-          },
-        }
-      );
-
-      // Orbital path draw animation
-      if (orbitPathRef.current) {
-        const path = orbitPathRef.current.querySelector('circle');
-        if (path) {
-          const length = (path as SVGCircleElement).getTotalLength?.() || 1000;
-          gsap.set(path, {
-            strokeDasharray: length,
-            strokeDashoffset: length,
-          });
-          gsap.to(path, {
-            strokeDashoffset: 0,
-            duration: 1.2,
-            delay: 0.4,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top 60%',
-              toggleActions: 'play none none reverse',
-            },
-          });
-        }
+  // GSAP animations - useGSAP handles React 18 StrictMode properly
+  useGSAP(() => {
+    // Header animation
+    gsap.fromTo(
+      headerRef.current,
+      { opacity: 0, y: 40 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: 'expo.out',
+        scrollTrigger: {
+          trigger: headerRef.current,
+          start: 'top 80%',
+          toggleActions: 'play none none reverse',
+        },
       }
+    );
 
-      // Satellite cards animation
-      satelliteRefs.current.forEach((ref, index) => {
-        if (!ref) return;
-        gsap.fromTo(
-          ref,
-          { opacity: 0, x: -50, scale: 0.9 },
-          {
-            opacity: 1,
-            x: 0,
-            scale: 1,
-            duration: 0.6,
-            delay: 0.6 + index * 0.15,
-            ease: 'expo.out',
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top 60%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
+    // Central card animation
+    gsap.fromTo(
+      centralCardRef.current,
+      { opacity: 0, rotateY: -90 },
+      {
+        opacity: 1,
+        rotateY: 0,
+        duration: 0.8,
+        delay: 0.2,
+        ease: 'expo.out',
+        scrollTrigger: {
+          trigger: centralCardRef.current,
+          start: 'top 80%',
+          toggleActions: 'play none none reverse',
+        },
+      }
+    );
 
-        // Floating animation
-        gsap.to(ref, {
-          y: index % 2 === 0 ? -8 : 8,
-          duration: 3 + index * 0.5,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-        });
+    // Orbital path fade-in animation (circles don't support getTotalLength)
+    if (orbitPathRef.current) {
+      gsap.fromTo(
+        orbitPathRef.current,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.8,
+          delay: 0.4,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 60%',
+            toggleActions: 'play none none reverse',
+          },
+        }
+      );
+    }
+
+    // Satellite cards animation
+    satelliteRefs.current.forEach((ref, index) => {
+      if (!ref) return;
+      gsap.fromTo(
+        ref,
+        { opacity: 0, x: -50, scale: 0.9 },
+        {
+          opacity: 1,
+          x: 0,
+          scale: 1,
+          duration: 0.6,
+          delay: 0.6 + index * 0.15,
+          ease: 'expo.out',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 60%',
+            toggleActions: 'play none none reverse',
+          },
+        }
+      );
+
+      // Floating animation
+      gsap.to(ref, {
+        y: index % 2 === 0 ? -8 : 8,
+        duration: 3 + index * 0.5,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
       });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+    });
+  }, { scope: sectionRef });
 
   return (
     <section

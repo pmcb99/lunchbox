@@ -19,4 +19,4 @@ Database version control for teams.
 From repo root: `./deploy.sh`  
 Builds the app from `frontend/` on the VPS. First time: clone the repo on the VPS to `~/lunchbox` (see `scripts/README.md`).
 
-**HTTPS (lunchbox.shovelstone.com):** run the one-off setup on the VPS with `scripts/setup-https.sh` (Nginx + Let's Encrypt). Full steps in `scripts/README.md`.
+**HTTPS (lunchbox.shovelstone.com):** run `CERTBOT_EMAIL=you@example.com ./scripts/setup-https-remote.sh` once (it SSHs in and runs Nginx + Let's Encrypt). Full steps in `scripts/README.md`.

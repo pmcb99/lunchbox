@@ -19,8 +19,31 @@ function App() {
   }, []);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
+    const { hash } = location;
+
+    // If there's no hash, just scroll to the top on route change
+    if (!hash) {
+      window.scrollTo({ top: 0, left: 0 });
+      return;
+    }
+
+    const targetId = hash.slice(1);
+    if (!targetId) return;
+
+    const scrollToHash = () => {
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+
+    // Try immediately in case the element is already rendered
+    scrollToHash();
+    // And schedule once after paint to catch elements that mount slightly later
+    const timeoutId = window.setTimeout(scrollToHash, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [location.pathname, location.hash]);
 
   return (
     <div className="min-h-screen bg-black text-white">

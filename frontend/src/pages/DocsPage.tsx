@@ -1,6 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { 
   Search, 
   Menu, 
@@ -20,8 +18,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-
-gsap.registerPlugin(ScrollTrigger);
 
 interface NavItem {
   title: string;
@@ -169,28 +165,6 @@ function DocSection({
 }) {
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        sectionRef.current,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: 'expo.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none reverse',
-          },
-        }
-      );
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
     <div ref={sectionRef} id={id} className="mb-16 scroll-mt-24">
       <h2 className="text-2xl lg:text-3xl font-display font-semibold text-white mb-3">
@@ -214,6 +188,27 @@ export function DocsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeSection, setActiveSection] = useState('');
   const mainRef = useRef<HTMLDivElement>(null);
+
+  const handleAnchorClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    // Only handle in-page hash links
+    if (!href.includes('#')) return;
+
+    const [, hash] = href.split('#');
+    const targetId = hash || '';
+
+    if (!targetId) return;
+
+    const element = document.getElementById(targetId);
+    if (element) {
+      event.preventDefault();
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Keep the URL hash in sync without adding a new history entry
+      if (window.location.hash !== `#${targetId}`) {
+        history.replaceState(null, '', `#${targetId}`);
+      }
+      setSidebarOpen(false);
+    }
+  };
 
   // Track active section on scroll
   useEffect(() => {
@@ -283,7 +278,7 @@ export function DocsPage() {
                     <div key={item.href} className="mb-4">
                       <a
                         href={item.href}
-                        onClick={() => setSidebarOpen(false)}
+                        onClick={(event) => handleAnchorClick(event, item.href)}
                         className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
                           activeSection === item.href.slice(1)
                             ? 'bg-[#ff6b35]/10 text-[#ff6b35]'
@@ -299,7 +294,7 @@ export function DocsPage() {
                             <a
                               key={child.href}
                               href={child.href}
-                              onClick={() => setSidebarOpen(false)}
+                              onClick={(event) => handleAnchorClick(event, child.href)}
                               className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors duration-200 ${
                                 activeSection === child.href.slice(1)
                                   ? 'text-[#ff6b35]'
@@ -800,6 +795,7 @@ Authorization: Bearer lbk_live_xxx
                     <a
                       key={item.href}
                       href={item.href}
+                      onClick={(event) => handleAnchorClick(event, item.href)}
                       className={`block text-sm transition-colors duration-200 ${
                         activeSection === item.href.slice(1)
                           ? 'text-[#ff6b35]'

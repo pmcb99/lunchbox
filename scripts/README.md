@@ -15,15 +15,11 @@
    ```
    This pulls latest, runs `npm ci` and `npm run build` in `frontend/`.
 
-3. **HTTPS for lunchbox.shovelstone.com** (run once on the VPS):
+3. **HTTPS for lunchbox.shovelstone.com** (run once; script SSHs in and runs setup on the VPS):
    - Ensure DNS for `lunchbox.shovelstone.com` points to the VPS IP.
-   - From your machine (script runs on VPS via SSH):
+   - From repo root:
      ```bash
-     CERTBOT_EMAIL=you@example.com ssh admin@37.27.26.44 'sudo REPO_DIR=/home/admin/lunchbox CERTBOT_EMAIL=you@example.com bash -s' < scripts/setup-https.sh
-     ```
-   - Or on the VPS as root:
-     ```bash
-     REPO_DIR=/home/admin/lunchbox CERTBOT_EMAIL=you@example.com ./setup-https.sh
+     CERTBOT_EMAIL=you@example.com ./scripts/setup-https-remote.sh
      ```
    This installs Nginx (if needed), configures the site to serve `frontend/dist`, and obtains a Let's Encrypt certificate with HTTP→HTTPS redirect.
 
