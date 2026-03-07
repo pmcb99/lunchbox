@@ -17,23 +17,31 @@ const faqs = [
   },
   {
     question: 'Can I self-host Lunchbox?',
-    answer: 'Yes! Our Enterprise plan includes a self-hosted option. You maintain full control of your data.',
+    answer: 'Yes. Lunchbox is designed to be self-hostable from day one. Run the control plane on your own infrastructure and point backups at your own S3, R2, or GCS bucket (BYOB).',
   },
   {
     question: 'How does the pricing work?',
-    answer: 'Pricing is based on storage and retention. The Free tier includes 1GB, Pro includes 100GB.',
+    answer: 'Self-hosted: you run the software and use your own storage (S3, R2, GCS). Managed: a platform fee plus usage; storage includes a GB-month allowance with overages on deduped storage and restore history.',
+  },
+  {
+    question: 'Why not just use S3 + Litestream?',
+    answer: 'You can. Lunchbox exists to remove the multi-key, multi-bucket setup and give you one secure place to manage backups, retention, and restores without living in cloud IAM.',
   },
   {
     question: 'Is my data secure?',
-    answer: 'Absolutely. All revisions are encrypted at rest with AES-256 and transmitted over TLS 1.3.',
+    answer: 'Yes. All revisions are encrypted at rest and transmitted over TLS 1.3. With client-side encryption enabled, we can\'t read your data.',
   },
   {
     question: 'Can I restore to a specific point in time?',
-    answer: 'Yes, for PostgreSQL with continuous archiving enabled. SQLite supports revision-based restore.',
+    answer: 'Yes, for PostgreSQL with continuous WAL archiving enabled (managed or self-hosted). SQLite supports revision-based restore.',
   },
   {
     question: 'Do you offer team collaboration?',
-    answer: 'Yes, Pro and Enterprise plans include team features with role-based access control.',
+    answer: 'Yes. Team features include roles and audit history. SSO and SCIM are available for enterprise support plans.',
+  },
+  {
+    question: 'Do you support enterprise requirements?',
+    answer: 'Yes. We can support SSO/SCIM, custom retention, security reviews, and support contracts while keeping the core product developer-first.',
   },
 ];
 
@@ -152,9 +160,9 @@ export function FAQSection() {
               />
               
               <img
-                src="/faq-card.jpg"
+                src="/lunchbox.png"
                 alt="Lunchbox FAQ"
-                className="relative w-full h-auto rounded-2xl shadow-2xl"
+                className="relative w-full h-auto max-w-sm mx-auto rounded-2xl shadow-2xl"
                 style={{
                   boxShadow: '0 50px 100px -20px rgba(0,0,0,0.8), 0 30px 60px -30px rgba(255,107,53,0.2)',
                 }}

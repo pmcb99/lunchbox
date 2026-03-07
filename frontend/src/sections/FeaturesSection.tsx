@@ -16,17 +16,17 @@ const features = [
   {
     icon: Shield,
     title: 'Immutable Revisions',
-    description: 'Content-addressed by BLAKE3 hash. Every revision is cryptographically verified.',
+    description: 'Content-addressed by BLAKE3 hash. Every revision is verifiable and tamper-evident.',
   },
   {
     icon: Clock,
     title: 'Instant Restore',
-    description: 'Restore any revision in seconds. Point-in-time recovery for PostgreSQL with WAL streaming.',
+    description: 'Restore any revision fast. Point-in-time recovery for Postgres with WAL archiving.',
   },
   {
     icon: Users,
-    title: 'Team Collaboration',
-    description: 'Share databases across your team with fine-grained access control and audit logs.',
+    title: 'Team Visibility',
+    description: 'Share databases across the team with roles, audit history, and safe restores.',
   },
   {
     icon: GitBranch,
@@ -152,10 +152,10 @@ export function FeaturesSection() {
         {/* Section Header */}
         <div ref={headerRef} className="text-center mb-16 lg:mb-24">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-semibold text-white mb-4">
-            Everything you <span className="text-[#ff6b35]">need</span>
+            Built for <span className="text-[#ff6b35]">developers</span>
           </h2>
           <p className="text-lg text-[#a0a0a0] max-w-2xl mx-auto">
-            Complete database versioning in one powerful platform
+            A clean API on top of durable object storage, without the setup pain
           </p>
         </div>
 
@@ -202,7 +202,7 @@ export function FeaturesSection() {
                   </h3>
                   
                   <p className="text-[#a0a0a0] mb-8 leading-relaxed">
-                    Sync your database with a single command. We handle the complexity—deduplication, compression, and secure transfer.
+                    Sync your database with a single command. We handle deduplication, compression, encryption, and the object store behind the scenes.
                   </p>
 
                   {/* Code Block */}

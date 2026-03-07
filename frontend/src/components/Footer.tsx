@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Database, Github, Twitter, MessageCircle } from 'lucide-react';
+import { Github, Twitter, MessageCircle } from 'lucide-react';
 
 export function Footer() {
   const productLinks = [
@@ -30,15 +30,17 @@ export function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-[#ff6b35] flex items-center justify-center">
-                <Database className="w-5 h-5 text-white" />
-              </div>
+              <img
+                src="/lunchbox.png"
+                alt="Lunchbox"
+                className="w-8 h-8 object-cover"
+              />
               <span className="text-xl font-display font-semibold text-white">
                 lunchbox<span className="text-[#ff6b35]">.</span>
               </span>
             </Link>
             <p className="text-[#a0a0a0] text-sm max-w-xs mb-6">
-              Database version control for teams. Immutable, content-addressed backups with one-command sync.
+              Developer-first database backups. Immutable, content-addressed revisions with one-command sync.
             </p>
             <div className="flex items-center gap-4">
               <a
@@ -129,10 +131,10 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="py-6 border-t border-[#2a2a2a] flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-[#a0a0a0] text-sm">
-            © 2026 Lunchbox. All rights reserved.
+            © 2026 Lunchbox, Inc. All rights reserved.
           </p>
-          <p className="text-[#a0a0a0] text-sm flex items-center gap-1">
-            Made with <span className="text-[#ff6b35]">♥</span> for developers
+          <p className="text-[#a0a0a0] text-sm">
+            Built for developers. Enterprise support available.
           </p>
         </div>
       </div>

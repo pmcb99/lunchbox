@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { HeroSection } from '../sections/HeroSection';
+import { ManagedBackendSection } from '../sections/ManagedBackendSection';
 import { FeaturesSection } from '../sections/FeaturesSection';
 import { HowItWorksSection } from '../sections/HowItWorksSection';
 import { TestimonialsSection } from '../sections/TestimonialsSection';
@@ -28,6 +29,7 @@ export function LandingPage() {
   return (
     <div ref={mainRef} className="relative">
       <HeroSection />
+      <ManagedBackendSection />
       <FeaturesSection />
       <HowItWorksSection />
       <TestimonialsSection />

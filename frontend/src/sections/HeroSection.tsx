@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { ArrowRight, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -205,8 +206,7 @@ export function HeroSection() {
                 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-display font-semibold text-white leading-[1.1]"
                 style={{ perspective: '1000px', willChange: 'transform' }}
               >
-                Database version{' '}
-                <span className="text-[#ff6b35]">control</span> for teams.
+                Git for your data
               </h1>
             </div>
 
@@ -214,29 +214,50 @@ export function HeroSection() {
               ref={subheadingRef}
               className="text-lg sm:text-xl text-[#a0a0a0] max-w-xl mb-8 leading-relaxed relative z-10"
             >
-              Immutable, content-addressed backups with one-command sync and instant restore.
+              Lunchbox is a central, secure place for backups. One API key, one CLI. We run durable object storage for you or you bring your own bucket.
             </p>
+
+            <ul className="space-y-3 mb-8 text-sm sm:text-base text-[#a0a0a0]">
+              <li className="flex items-center gap-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#ff6b35]" />
+                Single API key, no IAM sprawl
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#ff6b35]" />
+                Post-quantum encryption option with immutable revisions
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#ff6b35]" />
+                Restore any revision or point in time
+              </li>
+            </ul>
 
             <div ref={ctaRef} className="flex flex-col sm:flex-row gap-4 mb-8">
               <Button
+                asChild
                 size="lg"
                 className="bg-[#ff6b35] hover:bg-[#ff6b35]/90 text-white px-8 py-6 text-lg font-medium rounded-xl transition-all duration-300 hover:scale-105 animate-pulse-glow"
               >
-                Get Started
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <Link to="/platform">
+                  Get Started
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Link>
               </Button>
               <Button
+                asChild
                 size="lg"
                 variant="outline"
                 className="border-[#2a2a2a] text-white hover:bg-white/5 px-8 py-6 text-lg font-medium rounded-xl transition-all duration-300 group"
               >
-                <Play className="mr-2 w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
-                View Documentation
+                <a href="/docs">
+                  <Play className="mr-2 w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
+                  View Documentation
+                </a>
               </Button>
             </div>
 
             <p className="text-sm text-[#a0a0a0]">
-              Trusted by <span className="text-white font-medium">500+</span> engineering teams
+              Self-host or use managed. Built for developers, with enterprise support when you need it.
             </p>
           </div>
 
@@ -251,38 +272,29 @@ export function HeroSection() {
               className="relative w-full max-w-lg lg:max-w-xl"
             >
               {/* Inner element for floating animation and 3D transforms */}
-              <div
-                ref={imageRef}
-                className="relative"
-                style={{ 
-                  transformStyle: 'preserve-3d',
-                }}
-              >
+               <div
+                 ref={imageRef}
+                 className="relative"
+                 style={{ 
+                   transformStyle: 'preserve-3d',
+                   transform: 'translateX(-15px)',
+                 }}
+               >
                 {/* Glow Effect */}
                 <div 
                   className="absolute -inset-10 bg-[#ff6b35]/20 rounded-full blur-3xl opacity-50"
                 />
                 
                 {/* Image */}
-                <img
-                  src="/hero-card.jpg"
-                  alt="Lunchbox Backup Interface"
-                  className="relative w-full h-auto rounded-2xl shadow-2xl"
-                  style={{
-                    boxShadow: '0 50px 100px -20px rgba(0,0,0,0.8), 0 30px 60px -30px rgba(255,107,53,0.3)',
-                  }}
-                />
+                  <img
+                    src="/lunchbox.png"
+                    alt="Lunchbox Backup Interface"
+                    className="relative w-full h-auto rounded-2xl shadow-2xl"
+                    style={{
+                      boxShadow: '0 50px 100px -20px rgba(0,0,0,0.8), 0 30px 60px -30px rgba(255,107,53,0.3)',
+                    }}
+                  />
 
-                {/* Floating Badge */}
-                <div 
-                  ref={badgeRef}
-                  className="absolute -bottom-4 -left-4 bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-3 shadow-xl"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 rounded-full bg-[#4ade80] animate-pulse" />
-                    <span className="text-sm text-white font-medium">Synced 2 min ago</span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

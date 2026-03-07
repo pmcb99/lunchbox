@@ -213,24 +213,26 @@ export function CTASection() {
           ref={headingRef}
           className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-display font-semibold text-white mb-6"
         >
-          Ready to version your{' '}
-          <span className="text-[#ff6b35]">databases?</span>
+          Ship backups without the <span className="text-[#ff6b35]">cloud maze.</span>
         </h2>
 
         <p
           ref={descriptionRef}
           className="text-lg lg:text-xl text-[#a0a0a0] max-w-2xl mx-auto mb-10"
         >
-          Join hundreds of teams who've made database backups a non-issue. Get started in 30 seconds.
+          Use a self-hosted control plane or our managed service. Your data stays in durable object storage with a clean, developer-friendly API.
         </p>
 
         <div ref={ctaRef} className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Button
+            asChild
             size="lg"
             className="bg-[#ff6b35] hover:bg-[#ff6b35]/90 text-white px-10 py-7 text-lg font-medium rounded-xl transition-all duration-300 hover:scale-105 animate-pulse-glow"
           >
-            Get Started Free
-            <ArrowRight className="ml-2 w-5 h-5" />
+            <Link to="/platform">
+              Deploy or Get Started
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Link>
           </Button>
 
           <Link

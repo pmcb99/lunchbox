@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, Database } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface NavbarProps {
@@ -55,9 +55,11 @@ export function Navbar({ scrolled }: NavbarProps) {
             to="/" 
             className="flex items-center gap-2 group"
           >
-            <div className="w-8 h-8 rounded-lg bg-[#ff6b35] flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
-              <Database className="w-5 h-5 text-white" />
-            </div>
+            <img
+              src="/lunchbox.png"
+              alt="Lunchbox"
+              className="w-8 h-8 object-cover transition-transform duration-300 group-hover:scale-110"
+            />
             <span className="text-xl font-display font-semibold text-white">
               lunchbox<span className="text-[#ff6b35]">.</span>
             </span>
@@ -80,9 +82,10 @@ export function Navbar({ scrolled }: NavbarProps) {
           {/* CTA Button */}
           <div className="hidden md:block">
             <Button
+              asChild
               className="bg-[#ff6b35] hover:bg-[#ff6b35]/90 text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#ff6b35]/25"
             >
-              Get Started
+              <Link to="/platform">Get Started</Link>
             </Button>
           </div>
 
@@ -115,9 +118,12 @@ export function Navbar({ scrolled }: NavbarProps) {
             </Link>
           ))}
           <Button
+            asChild
             className="w-full bg-[#ff6b35] hover:bg-[#ff6b35]/90 text-white mt-4"
           >
-            Get Started
+            <Link to="/platform" onClick={() => setMobileMenuOpen(false)}>
+              Get Started
+            </Link>
           </Button>
         </div>
       </div>

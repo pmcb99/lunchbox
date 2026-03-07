@@ -1,13 +1,31 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import type { ReactElement } from 'react';
+import { Navigate, Routes, Route, useLocation } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { LandingPage } from './pages/LandingPage';
 import { DocsPage } from './pages/DocsPage';
+import { PlatformLoginPage } from './pages/PlatformLoginPage';
+import { PlatformPage } from './pages/PlatformPage';
+import { PlatformDatabasesPage } from './pages/PlatformDatabasesPage';
+import { DbViewerPage } from './pages/DbViewerPage';
+import { PlatformRevisionsPage } from './pages/PlatformRevisionsPage';
+import { PlatformSchedulesPage } from './pages/PlatformSchedulesPage';
+import { PlatformKeysPage } from './pages/PlatformKeysPage';
 import { Footer } from './components/Footer';
+import { isAuthenticated } from './lib/auth';
+
+function ProtectedRoute({ children }: { children: ReactElement }) {
+  if (!isAuthenticated()) {
+    return <Navigate to="/platform/login" replace />;
+  }
+
+  return children;
+}
 
 function App() {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const isPlatformRoute = location.pathname.startsWith('/platform');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,14 +65,63 @@ function App() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <Navbar scrolled={scrolled} />
+      {!isPlatformRoute && <Navbar scrolled={scrolled} />}
       <main>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/docs" element={<DocsPage />} />
+          <Route path="/platform/login" element={<PlatformLoginPage />} />
+          <Route
+            path="/platform"
+            element={
+              <ProtectedRoute>
+                <PlatformPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/platform/databases"
+            element={
+              <ProtectedRoute>
+                <PlatformDatabasesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/platform/db-viewer"
+            element={
+              <ProtectedRoute>
+                <DbViewerPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/platform/revisions"
+            element={
+              <ProtectedRoute>
+                <PlatformRevisionsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/platform/schedules"
+            element={
+              <ProtectedRoute>
+                <PlatformSchedulesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/platform/keys"
+            element={
+              <ProtectedRoute>
+                <PlatformKeysPage />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </main>
-      <Footer />
+      {!isPlatformRoute && <Footer />}
     </div>
   );
 }

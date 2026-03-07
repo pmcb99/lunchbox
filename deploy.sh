@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Deploy on VPS: SSH in, pull latest, build app, restart.
+# Self-hosted deploy: SSH in, pull latest, build app, restart.
 # Run from repo root. Requires SSH access to admin@37.27.26.44.
 
 SERVER="37.27.26.44"

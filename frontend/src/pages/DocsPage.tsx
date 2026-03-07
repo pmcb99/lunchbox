@@ -11,9 +11,11 @@ import {
   Terminal,
   Settings,
   Cloud,
+  RefreshCw,
   Code,
   Shield,
-  Zap
+  Zap,
+  Users
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -28,13 +30,44 @@ interface NavItem {
 
 const navigation: NavItem[] = [
   {
-    title: 'Getting Started',
-    href: '#getting-started',
+    title: 'Start here',
+    href: '#start-here',
     icon: Zap,
     children: [
-      { title: 'Quick Start', href: '#quick-start' },
-      { title: 'Installation', href: '#installation' },
-      { title: 'Configuration', href: '#configuration' },
+      { title: 'Install', href: '#install' },
+      { title: 'First backup', href: '#first-backup' },
+      { title: 'Restore', href: '#restore' },
+    ],
+  },
+  {
+    title: 'Security',
+    href: '#security',
+    icon: Shield,
+    children: [
+      { title: 'Encryption model', href: '#encryption-model' },
+      { title: 'Post-quantum mode', href: '#post-quantum' },
+      { title: 'Key management', href: '#key-management' },
+      { title: 'Threat model', href: '#threat-model' },
+    ],
+  },
+  {
+    title: 'Managed tiers',
+    href: '#managed-tiers',
+    icon: Cloud,
+    children: [
+      { title: 'Maximum durability', href: '#managed-maximum' },
+      { title: 'Best value (EU)', href: '#managed-best-value' },
+      { title: 'BYOB', href: '#byob' },
+    ],
+  },
+  {
+    title: 'Reliability & limits',
+    href: '#reliability-limits',
+    icon: RefreshCw,
+    children: [
+      { title: 'Coverage', href: '#reliability-coverage' },
+      { title: 'Provider availability', href: '#provider-availability' },
+      { title: 'Restore safeguards', href: '#restore-safeguards' },
     ],
   },
   {
@@ -56,11 +89,21 @@ const navigation: NavItem[] = [
       { title: 'SQLite', href: '#sqlite' },
       { title: 'PostgreSQL', href: '#postgresql' },
       { title: 'Dry Run', href: '#dry-run' },
+      { title: 'Scheduling', href: '#scheduling' },
+    ],
+  },
+  {
+    title: 'Team & Audit',
+    href: '#team-audit',
+    icon: Users,
+    children: [
+      { title: 'Roles', href: '#roles' },
+      { title: 'Audit history', href: '#audit-history' },
     ],
   },
   {
     title: 'Restore Operations',
-    href: '#restore-operations',
+    href: '#restore',
     icon: Terminal,
     children: [
       { title: 'List Revisions', href: '#list-revisions' },
@@ -322,21 +365,53 @@ export function DocsPage() {
                 <div className="flex items-center gap-2 text-sm text-[#666] mb-4">
                   <span>Documentation</span>
                   <ChevronRight className="w-4 h-4" />
-                  <span className="text-[#a0a0a0]">Getting Started</span>
+                  <span className="text-[#a0a0a0]">Start here</span>
                 </div>
                 <h1 className="text-4xl lg:text-5xl font-display font-semibold text-white mb-4">
                   Lunchbox Documentation
                 </h1>
                 <p className="text-xl text-[#a0a0a0] leading-relaxed">
-                  Database version control for teams. Immutable, content-addressed backups with one-command sync and instant restore.
+                  Git for your data: developer-first backups for SQLite and Postgres. One API key, immutable revisions, and instant restore with a self-hostable control plane.
                 </p>
               </div>
 
-              {/* Quick Start */}
+              {/* Start Here */}
+              <DocSection
+                id="start-here"
+                title="Start here"
+                description="Get encrypted backups running fast, then tune retention and storage as needed."
+              >
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-5">
+                    <h4 className="text-base font-display font-medium text-white mb-2">Install</h4>
+                    <p className="text-sm text-[#a0a0a0]">Set up the CLI on your machine or CI runner.</p>
+                  </div>
+                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-5">
+                    <h4 className="text-base font-display font-medium text-white mb-2">First backup</h4>
+                    <p className="text-sm text-[#a0a0a0]">Encrypt, upload, and version your database in one command.</p>
+                  </div>
+                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-5">
+                    <h4 className="text-base font-display font-medium text-white mb-2">Restore</h4>
+                    <p className="text-sm text-[#a0a0a0]">Pull any revision or point-in-time snapshot.</p>
+                  </div>
+                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-5">
+                    <h4 className="text-base font-display font-medium text-white mb-2">Platform preview</h4>
+                    <p className="text-sm text-[#a0a0a0]">
+                      Use the demo sign-in to explore the UI at{' '}
+                      <a href="/platform" className="text-[#ff6b35] hover:underline">/platform</a>.
+                    </p>
+                  </div>
+                </div>
+                <p className="text-sm text-[#777] mt-6">
+                  Demo access uses a temporary login flow until full authentication ships.
+                </p>
+              </DocSection>
+
+              {/* First Backup */}
               <DocSection 
-                id="quick-start" 
-                title="Quick Start (30 seconds)"
-                description="Get up and running with Lunchbox in under a minute."
+                id="first-backup" 
+                title="First backup (30 seconds)"
+                description="Encrypt before upload and create your first revision in under a minute."
               >
                 <CodeBlock 
                   code={`# 1. Install
@@ -349,14 +424,14 @@ $ echo "LUNCHBOX_API_KEY=lbk_live_xxx" > .env
 $ lunchbox sync ./mydatabase.db`} 
                 />
                 <p className="text-[#a0a0a0] mt-4">
-                  Done. Your database is now versioned at <code className="bg-[#1a1a1a] px-2 py-0.5 rounded text-sm">lunchbox.dev</code> → <strong>Databases</strong> → <strong>mydatabase.db</strong>.
+                  Done. Your database is now versioned in the Lunchbox control plane at <code className="bg-[#1a1a1a] px-2 py-0.5 rounded text-sm">lunchbox.dev</code> → <strong>Databases</strong> → <strong>mydatabase.db</strong>.
                 </p>
               </DocSection>
 
               {/* Installation */}
               <DocSection 
-                id="installation" 
-                title="Installation"
+                id="install" 
+                title="Install"
                 description="Install Lunchbox on macOS, Linux, or Windows."
               >
                 <h3 className="text-xl font-display font-medium text-white mb-4">macOS / Linux</h3>
@@ -368,6 +443,81 @@ $ pip install lunchbox`}
                 
                 <h3 className="text-xl font-display font-medium text-white mb-4 mt-8">Verify Installation</h3>
                 <CodeBlock code={`$ lunchbox --version  # 0.8.x`} />
+              </DocSection>
+
+              {/* Security */}
+              <DocSection
+                id="security"
+                title="Security"
+                description="Lunchbox encrypts data before upload and keeps keys in your control."
+              >
+                <h3 id="encryption-model" className="text-xl font-display font-medium text-white mb-4">Encryption model</h3>
+                <p className="text-[#a0a0a0] mb-6">
+                  Client-side encryption happens before data leaves your environment. Managed storage also supports server-side encryption at the object store layer.
+                </p>
+
+                <h3 id="post-quantum" className="text-xl font-display font-medium text-white mb-4">Post-quantum mode</h3>
+                <p className="text-[#a0a0a0] mb-6">
+                  Lunchbox can enable post-quantum encryption for new revisions. When enabled, new backups are encrypted with PQ-safe algorithms for long-term data durability.
+                </p>
+                <CodeBlock
+                  code={`# Enable post-quantum encryption
+$ lunchbox sync ./mydatabase.db --pq-encryption`}
+                />
+
+                <h3 id="key-management" className="text-xl font-display font-medium text-white mb-4">Key management</h3>
+                <p className="text-[#a0a0a0] mb-6">
+                  Bring-your-own key (BYOK) or generate keys locally. Keys never need to be shared with Lunchbox for client-side encryption.
+                </p>
+
+                <h3 id="threat-model" className="text-xl font-display font-medium text-white mb-4">Threat model</h3>
+                <p className="text-[#a0a0a0] mb-4">
+                  We can see metadata (workspace, database name, sizes) but cannot read encrypted payloads when client-side encryption is enabled. You retain control of keys and restores.
+                </p>
+              </DocSection>
+
+              {/* Managed Tiers */}
+              <DocSection
+                id="managed-tiers"
+                title="Managed tiers"
+                description="Choose managed storage or bring your own bucket."
+              >
+                <h3 id="managed-maximum" className="text-xl font-display font-medium text-white mb-4">Maximum durability</h3>
+                <p className="text-[#a0a0a0] mb-6">
+                  The maximum durability tier targets 99.999999999% durability and 99.99% availability.
+                </p>
+
+                <h3 id="managed-best-value" className="text-xl font-display font-medium text-white mb-4">Best value (EU)</h3>
+                <p className="text-[#a0a0a0] mb-6">
+                  The best value tier is Ceph-backed and supports server-side encryption plus object lock/versioning.
+                </p>
+
+                <h3 id="byob" className="text-xl font-display font-medium text-white mb-4">BYOB (any S3-compatible)</h3>
+                <p className="text-[#a0a0a0] mb-4">
+                  Point Lunchbox at any S3-compatible provider. You control storage pricing, regions, and policies.
+                </p>
+              </DocSection>
+
+              {/* Reliability & Limits */}
+              <DocSection
+                id="reliability-limits"
+                title="Reliability & limits"
+                description="What Lunchbox covers vs what your storage provider guarantees."
+              >
+                <h3 id="reliability-coverage" className="text-xl font-display font-medium text-white mb-4">What we cover</h3>
+                <p className="text-[#a0a0a0] mb-6">
+                  Lunchbox provides encryption, snapshot integrity, metadata availability, and restore tooling. Storage durability and availability are defined by your chosen backend.
+                </p>
+
+                <h3 id="provider-availability" className="text-xl font-display font-medium text-white mb-4">Provider network availability</h3>
+                <p className="text-[#a0a0a0] mb-6">
+                  The EU provider publishes a 99.9% annual average network availability commitment for its data centres. This is a network metric, not an object-storage-specific SLA.
+                </p>
+
+                <h3 id="restore-safeguards" className="text-xl font-display font-medium text-white mb-4">Restore safeguards</h3>
+                <p className="text-[#a0a0a0] mb-4">
+                  Restores can be throttled or paused to prevent surprise egress or compute costs, especially for large historical snapshots.
+                </p>
               </DocSection>
 
               {/* Configuration */}
@@ -488,12 +638,41 @@ $ lunchbox sync --schema public --schema analytics`}
                 <CodeBlock 
                   code={`$ lunchbox sync --dry-run  # Shows what would upload, no data sent`} 
                 />
+
+                <h3 id="scheduling" className="text-xl font-display font-medium text-white mb-4 mt-8">Scheduling</h3>
+                <p className="text-[#a0a0a0] mb-4">
+                  Schedule backups with a cron expression. Use the same flags you would for sync.
+                </p>
+                <CodeBlock 
+                  code={`# Nightly at 03:00 UTC
+$ lunchbox schedule "0 3 * * *" --db ./mydatabase.db
+
+# Postgres
+$ lunchbox schedule "0 3 * * *" --db postgresql://localhost/app`} 
+                />
+              </DocSection>
+
+              {/* Team & Audit */}
+              <DocSection 
+                id="team-audit" 
+                title="Team & audit"
+                description="Collaborate safely with roles and an audit trail of backup activity."
+              >
+                <h3 id="roles" className="text-xl font-display font-medium text-white mb-4">Roles</h3>
+                <p className="text-[#a0a0a0] mb-6">
+                  Manage access with roles like owner, admin, and read-only. Roles control who can create restores, change retention, and manage API keys.
+                </p>
+
+                <h3 id="audit-history" className="text-xl font-display font-medium text-white mb-4">Audit history</h3>
+                <p className="text-[#a0a0a0] mb-4">
+                  Every sync, restore, and retention change is logged with actor, timestamp, and metadata for traceability.
+                </p>
               </DocSection>
 
               {/* Restore Operations */}
               <DocSection 
-                id="restore-operations" 
-                title="Restore Operations"
+                id="restore" 
+                title="Restore"
                 description="Restore is the inverse of sync—pull any revision to local disk or directly to a running Postgres instance."
               >
                 <h3 id="list-revisions" className="text-xl font-display font-medium text-white mb-4">List Available Revisions</h3>
@@ -536,7 +715,7 @@ $ lunchbox restore production-db --into-existing --schema-only`}
 
                 <h3 id="pitr" className="text-xl font-display font-medium text-white mb-4 mt-8">Point-in-Time Recovery (Postgres)</h3>
                 <p className="text-[#a0a0a0] mb-4">
-                  When using continuous WAL archiving (enterprise feature):
+                  When using continuous WAL archiving (managed or self-hosted):
                 </p>
                 <CodeBlock 
                   code={`$ lunchbox restore production-db --timestamp "2026-02-02 09:30:00"`} 
