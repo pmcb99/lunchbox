@@ -203,10 +203,12 @@ export function HeroSection() {
             <div className="mb-8" style={{ minHeight: '120px' }}>
               <h1
                 ref={headingRef}
-                className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-display font-semibold text-white leading-[1.1]"
+                className="text-4xl sm:text-5xl lg:text-4xl xl:text-5xl font-display font-semibold text-white leading-[1.1]"
                 style={{ perspective: '1000px', willChange: 'transform' }}
               >
-                Git for your data
+                Self-host your database.
+                <br />
+                Let Lunchbox handle backup, restore, and history.
               </h1>
             </div>
 
@@ -214,21 +216,21 @@ export function HeroSection() {
               ref={subheadingRef}
               className="text-lg sm:text-xl text-[#a0a0a0] max-w-xl mb-8 leading-relaxed relative z-10"
             >
-              Lunchbox is a central, secure place for backups. One API key, one CLI. We run durable object storage for you or you bring your own bucket.
+              Keep SQLite or Postgres exactly where it runs today. Lunchbox adds automatic encrypted backups, point-in-time restores, and git-style revision history — without moving to a managed database.
             </p>
 
             <ul className="space-y-3 mb-8 text-sm sm:text-base text-[#a0a0a0]">
               <li className="flex items-center gap-3">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#ff6b35]" />
-                Single API key, no IAM sprawl
+                Automatic, encrypted backups for self-hosted databases
               </li>
               <li className="flex items-center gap-3">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#ff6b35]" />
-                Post-quantum encryption option with immutable revisions
+                One-command restores to any revision or point in time
               </li>
               <li className="flex items-center gap-3">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#ff6b35]" />
-                Restore any revision or point in time
+                Optional post-quantum encryption for long-lived backups
               </li>
             </ul>
 
@@ -239,7 +241,7 @@ export function HeroSection() {
                 className="bg-[#ff6b35] hover:bg-[#ff6b35]/90 text-white px-8 py-6 text-lg font-medium rounded-xl transition-all duration-300 hover:scale-105 animate-pulse-glow"
               >
                 <Link to="/platform">
-                  Get Started
+                  Protect my database
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
               </Button>
@@ -251,13 +253,13 @@ export function HeroSection() {
               >
                 <a href="/docs">
                   <Play className="mr-2 w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
-                  View Documentation
+                  View docs
                 </a>
               </Button>
             </div>
 
             <p className="text-sm text-[#a0a0a0]">
-              Self-host or use managed. Built for developers, with enterprise support when you need it.
+              Self-host your database. Let Lunchbox handle the safety net, with managed or bring-your-own storage options.
             </p>
           </div>
 

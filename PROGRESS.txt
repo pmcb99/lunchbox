@@ -1,0 +1,13 @@
+Lunchbox v1 Backlog
+
+This file is the execution backlog derived from `PRD.md`. It is the working list of epics and stories for Lunchbox v1 delivery. `PRD.md` remains the source of product intent and scope. `BACKEND_API.md` remains the current-state backend API reference and will evolve as implementation catches up with the PRD.
+
+Status key:
+- [ ] Not started
+- [-] In progress
+- [x] Done
+
+Epic 0 — Test Harness and Delivery Foundation
+
+[ ] LB-0000 — Setup
+Acceptance: we make stories that ensure 

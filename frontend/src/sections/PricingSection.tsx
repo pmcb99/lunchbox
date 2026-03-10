@@ -1,112 +1,116 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const byobPlans = [
   {
-    name: 'BYOB Starter',
-    price: '€1.99',
+    name: 'BYOB Developer',
+    badge: 'Bring your own bucket',
+    price: '€9',
     period: '/mo',
-    description: 'Use your own bucket with a simple control plane.',
+    description:
+      'Use your own S3-compatible bucket and pay Lunchbox for the safety layer, restore UX, and revision history.',
     features: [
-      'Small limits for single DBs',
+      '3 protected databases included',
+      '30-day retention window',
       'Client-side encryption',
-      'Versioned snapshots + retention',
-      'One-command restore',
+      'CLI restore and revision history',
     ],
-    cta: 'Get Started',
+    cta: 'Choose BYOB Developer',
     highlighted: false,
   },
   {
     name: 'BYOB Team',
-    price: '€5.99',
+    badge: 'Bring your own bucket',
+    price: '€19',
     period: '/mo',
-    description: 'Team limits with audit history and policies.',
+    description:
+      'For small teams that want Lunchbox’s backup and restore layer on top of their own bucket.',
     features: [
-      'Larger limits for teams',
-      'Audit log + retention policies',
-      'Webhooks + integrations',
-      'Bring any S3-compatible bucket',
+      '15 protected databases included',
+      '90-day retention window',
+      'Client-side encryption + revision history',
+      'Team restore workflows',
     ],
-    cta: 'Start Free Trial',
+    cta: 'Choose BYOB Team',
     highlighted: true,
+  },
+  {
+    name: 'BYOB Business',
+    badge: 'Bring your own bucket',
+    price: '€59',
+    period: '/mo',
+    description:
+      'For larger teams that want to keep storage in-house while adding policy and operational controls.',
+    features: [
+      '100 protected databases included',
+      '180-day retention window',
+      'Team features and audit history',
+      'Priority support',
+    ],
+    cta: 'Talk to us',
+    highlighted: false,
   },
 ];
 
-const managedPlans = {
-  s3: [
-    {
-      name: 'Managed Max Durability 1 TB',
-      price: '€29.99',
-      period: '/mo',
-      description: 'Lowest data-loss risk with multi-zone redundancy.',
-      features: [
-        '1 TB managed storage',
-        'Encrypted, versioned backups',
-        'Retention rules + PIT restore',
-        'One-command restore',
-      ],
-      cta: 'Start Free Trial',
-      highlighted: true,
-    },
-    {
-      name: 'Managed Max Durability 5 TB',
-      price: '€129.99',
-      period: '/mo',
-      description: 'Scale storage with the same durability targets.',
-      features: [
-        '5 TB managed storage',
-        'Encrypted, versioned backups',
-        'Retention rules + PIT restore',
-        'One-command restore',
-      ],
-      cta: 'Contact Us',
-      highlighted: false,
-    },
-  ],
-  hetzner: [
-    {
-      name: 'Managed Best Value 1 TB',
-      price: '€7.99',
-      period: '/mo',
-      description: 'Cost-efficient managed storage in the EU.',
-      features: [
-        '1 TB storage + 1 TB egress',
-        'S3-compatible, Ceph-backed',
-        'Server-side encryption + object lock',
-        'One-command restore',
-      ],
-      cta: 'Start Free Trial',
-      highlighted: true,
-    },
-    {
-      name: 'Managed Best Value 5 TB',
-      price: '€39.99',
-      period: '/mo',
-      description: 'Larger storage with predictable EU pricing.',
-      features: [
-        '5 TB storage + 1 TB egress',
-        'S3-compatible, Ceph-backed',
-        'Server-side encryption + object lock',
-        'One-command restore',
-      ],
-      cta: 'Contact Us',
-      highlighted: false,
-    },
-  ],
-};
+const managedPlans = [
+  {
+    name: 'Managed Starter',
+    badge: 'Managed storage',
+    price: '€15',
+    period: '/mo',
+    description:
+      'Managed storage for small projects that want backups and restores without setting up buckets.',
+    features: [
+      '3 protected databases included',
+      '100 GB protected backup data included',
+      '30-day retention window',
+      'Encrypted backups, history, and restore UX included',
+    ],
+    cta: 'Start Managed Starter',
+    highlighted: false,
+  },
+  {
+    name: 'Managed Team',
+    badge: 'Managed storage',
+    price: '€35',
+    period: '/mo',
+    description:
+      'Managed storage for teams that want a proper safety net without paying managed database pricing.',
+    features: [
+      '10 protected databases included',
+      '500 GB protected backup data included',
+      '90-day retention window',
+      'Encrypted backups, restore history, and revision browsing',
+    ],
+    cta: 'Start Managed Team',
+    highlighted: true,
+  },
+  {
+    name: 'Managed Business',
+    badge: 'Managed storage',
+    price: '€99',
+    period: '/mo',
+    description: 'For organisations that need more databases, longer history, and team support.',
+    features: [
+      '50 protected databases included',
+      '3 TB protected backup data included',
+      '180-day retention window',
+      'Team features, audit history, and priority support',
+    ],
+    cta: 'Talk to us',
+    highlighted: false,
+  },
+];
 
 export function PricingSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const [managedBackend, setManagedBackend] = useState<'s3' | 'hetzner'>('s3');
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -150,8 +154,6 @@ export function PricingSection() {
     return () => ctx.revert();
   }, []);
 
-  const currentManagedPlans = managedPlans[managedBackend];
-
   return (
     <section
       id="pricing"
@@ -161,119 +163,46 @@ export function PricingSection() {
       <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div ref={headerRef} className="text-center mb-12 lg:mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-semibold text-white mb-4">
-            Pricing that respects your backend
+            Secure database backup pricing
           </h2>
           <p className="text-lg text-[#a0a0a0] max-w-2xl mx-auto">
-            All managed plans include encryption, versioned backups, retention rules, and one-command restore. The choice is <span className="text-white">durability vs price</span>, not features.
+            Pay for protected databases and retention — not queries, vCPUs, or database hosting. All plans include encryption, revision history, and one-command restore.
           </p>
         </div>
 
-        <Tabs defaultValue="managed" className="w-full">
-          <div className="flex flex-col items-center gap-6 mb-10">
-            <TabsList className="bg-[#111111] border border-[#2a2a2a]">
-              <TabsTrigger value="managed" className="text-white">Managed</TabsTrigger>
-              <TabsTrigger value="byob" className="text-white">BYOB</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="managed" className="w-full">
-              <div className="flex flex-col items-center gap-6">
-                <ToggleGroup
-                  type="single"
-                  value={managedBackend}
-                  onValueChange={(value) => {
-                    if (value === 's3' || value === 'hetzner') {
-                      setManagedBackend(value);
-                    }
-                  }}
-                  variant="outline"
-                  size="sm"
-                  spacing={0}
-                  className="bg-[#111111] border border-[#2a2a2a]"
-                >
-                   <ToggleGroupItem value="s3" className="text-white">Maximum durability</ToggleGroupItem>
-                   <ToggleGroupItem value="hetzner" className="text-white">Best value (EU)</ToggleGroupItem>
-                </ToggleGroup>
-
-                <div className="grid md:grid-cols-2 gap-6 lg:gap-8 items-stretch w-full">
-                  {currentManagedPlans.map((plan, index) => (
-                    <div
-                      key={plan.name}
-                      ref={(el) => { cardsRef.current[index] = el; }}
-                      className={`relative rounded-2xl p-6 lg:p-8 transition-all duration-500 group ${
-                        plan.highlighted
-                          ? 'bg-gradient-to-br from-[#1a1a1a] to-[#111111] border-2 border-[#ff6b35]/50 scale-[1.01]'
-                          : 'bg-[#1a1a1a]/80 border border-[#2a2a2a] hover:border-[#ff6b35]/30'
-                      }`}
-                    >
-                      <h3 className="text-xl font-display font-semibold text-white mb-2">
-                        {plan.name}
-                      </h3>
-                      <div className="flex items-baseline gap-1 mb-1">
-                        <span className={`text-4xl font-display font-bold ${
-                          plan.highlighted ? 'text-[#ff6b35]' : 'text-white'
-                        }`}>
-                          {plan.price}
-                        </span>
-                        <span className="text-[#a0a0a0]">{plan.period}</span>
-                      </div>
-                      <p className="text-[#a0a0a0] text-sm mb-6">
-                        {plan.description}
-                      </p>
-                      <ul className="space-y-3 mb-8">
-                        {plan.features.map((feature) => (
-                          <li key={feature} className="flex items-center gap-3">
-                            <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                              plan.highlighted ? 'bg-[#ff6b35]/20' : 'bg-white/10'
-                            }`}>
-                              <Check className={`w-3 h-3 ${
-                                plan.highlighted ? 'text-[#ff6b35]' : 'text-white'
-                              }`} />
-                            </div>
-                            <span className="text-sm text-[#a0a0a0]">{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-                      <Button
-                        className={`w-full py-6 rounded-xl font-medium transition-all duration-300 ${
-                          plan.highlighted
-                            ? 'bg-[#ff6b35] hover:bg-[#ff6b35]/90 text-white hover:scale-105 hover:shadow-lg hover:shadow-[#ff6b35]/25'
-                            : 'bg-white/5 hover:bg-white/10 text-white border border-[#2a2a2a] hover:border-[#ff6b35]/30'
-                        }`}
-                      >
-                        {plan.cta}
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-
-                <p className="text-xs text-[#777] max-w-3xl text-center">
-                  {managedBackend === 'hetzner'
-                    ? 'Base includes 1 TB storage + 1 TB egress. Extra egress is priced per TB by the upstream provider.'
-                    : 'Durability/availability targets apply to the maximum durability tier.'}
-                </p>
-              </div>
-            </TabsContent>
-          </div>
-
-          <TabsContent value="byob">
-            <div className="grid md:grid-cols-2 gap-6 lg:gap-8 items-stretch">
+        <div className="space-y-12">
+          {/* BYOB */}
+          <div>
+            <h3 className="text-xl font-display font-semibold text-white mb-4">
+              Bring your own bucket
+            </h3>
+            <div className="grid md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
               {byobPlans.map((plan, index) => (
                 <div
                   key={plan.name}
-                  ref={(el) => { cardsRef.current[index + currentManagedPlans.length] = el; }}
+                  ref={(el) => {
+                    cardsRef.current[index] = el;
+                  }}
                   className={`relative rounded-2xl p-6 lg:p-8 transition-all duration-500 group ${
                     plan.highlighted
                       ? 'bg-gradient-to-br from-[#1a1a1a] to-[#111111] border-2 border-[#ff6b35]/50 scale-[1.01]'
                       : 'bg-[#1a1a1a]/80 border border-[#2a2a2a] hover:border-[#ff6b35]/30'
                   }`}
                 >
-                  <h3 className="text-xl font-display font-semibold text-white mb-2">
+                  <div className="mb-3">
+                    <span className="inline-flex items-center rounded-full border border-[#2a2a2a] bg-black/40 px-3 py-1 text-xs font-medium text-[#a0a0a0]">
+                      {plan.badge}
+                    </span>
+                  </div>
+                  <h4 className="text-lg font-display font-semibold text-white mb-2">
                     {plan.name}
-                  </h3>
+                  </h4>
                   <div className="flex items-baseline gap-1 mb-1">
-                    <span className={`text-4xl font-display font-bold ${
-                      plan.highlighted ? 'text-[#ff6b35]' : 'text-white'
-                    }`}>
+                    <span
+                      className={`text-3xl font-display font-bold ${
+                        plan.highlighted ? 'text-[#ff6b35]' : 'text-white'
+                      }`}
+                    >
                       {plan.price}
                     </span>
                     <span className="text-[#a0a0a0]">{plan.period}</span>
@@ -284,19 +213,23 @@ export function PricingSection() {
                   <ul className="space-y-3 mb-8">
                     {plan.features.map((feature) => (
                       <li key={feature} className="flex items-center gap-3">
-                        <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                          plan.highlighted ? 'bg-[#ff6b35]/20' : 'bg-white/10'
-                        }`}>
-                          <Check className={`w-3 h-3 ${
-                            plan.highlighted ? 'text-[#ff6b35]' : 'text-white'
-                          }`} />
+                        <div
+                          className={`w-5 h-5 rounded-full flex items-center justify-center ${
+                            plan.highlighted ? 'bg-[#ff6b35]/20' : 'bg-white/10'
+                          }`}
+                        >
+                          <Check
+                            className={`w-3 h-3 ${
+                              plan.highlighted ? 'text-[#ff6b35]' : 'text-white'
+                            }`}
+                          />
                         </div>
                         <span className="text-sm text-[#a0a0a0]">{feature}</span>
                       </li>
                     ))}
                   </ul>
                   <Button
-                    className={`w-full py-6 rounded-xl font-medium transition-all duration-300 ${
+                    className={`w-full py-4 rounded-xl font-medium transition-all duration-300 ${
                       plan.highlighted
                         ? 'bg-[#ff6b35] hover:bg-[#ff6b35]/90 text-white hover:scale-105 hover:shadow-lg hover:shadow-[#ff6b35]/25'
                         : 'bg-white/5 hover:bg-white/10 text-white border border-[#2a2a2a] hover:border-[#ff6b35]/30'
@@ -307,8 +240,83 @@ export function PricingSection() {
                 </div>
               ))}
             </div>
-          </TabsContent>
-        </Tabs>
+          </div>
+
+          {/* Managed storage */}
+          <div>
+            <h3 className="text-xl font-display font-semibold text-white mb-4">
+              Managed storage
+            </h3>
+            <div className="grid md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
+              {managedPlans.map((plan, index) => (
+                <div
+                  key={plan.name}
+                  ref={(el) => {
+                    cardsRef.current[index + byobPlans.length] = el;
+                  }}
+                  className={`relative rounded-2xl p-6 lg:p-8 transition-all duration-500 group ${
+                    plan.highlighted
+                      ? 'bg-gradient-to-br from-[#1a1a1a] to-[#111111] border-2 border-[#ff6b35]/50 scale-[1.01]'
+                      : 'bg-[#1a1a1a]/80 border border-[#2a2a2a] hover:border-[#ff6b35]/30'
+                  }`}
+                >
+                  <div className="mb-3">
+                    <span className="inline-flex items-center rounded-full border border-[#2a2a2a] bg-black/40 px-3 py-1 text-xs font-medium text-[#a0a0a0]">
+                      {plan.badge}
+                    </span>
+                  </div>
+                  <h4 className="text-lg font-display font-semibold text-white mb-2">
+                    {plan.name}
+                  </h4>
+                  <div className="flex items-baseline gap-1 mb-1">
+                    <span
+                      className={`text-3xl font-display font-bold ${
+                        plan.highlighted ? 'text-[#ff6b35]' : 'text-white'
+                      }`}
+                    >
+                      {plan.price}
+                    </span>
+                    <span className="text-[#a0a0a0]">{plan.period}</span>
+                  </div>
+                  <p className="text-[#a0a0a0] text-sm mb-6">
+                    {plan.description}
+                  </p>
+                  <ul className="space-y-3 mb-8">
+                    {plan.features.map((feature) => (
+                      <li key={feature} className="flex items-center gap-3">
+                        <div
+                          className={`w-5 h-5 rounded-full flex items-center justify-center ${
+                            plan.highlighted ? 'bg-[#ff6b35]/20' : 'bg-white/10'
+                          }`}
+                        >
+                          <Check
+                            className={`w-3 h-3 ${
+                              plan.highlighted ? 'text-[#ff6b35]' : 'text-white'
+                            }`}
+                          />
+                        </div>
+                        <span className="text-sm text-[#a0a0a0]">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Button
+                    className={`w-full py-4 rounded-xl font-medium transition-all duration-300 ${
+                      plan.highlighted
+                        ? 'bg-[#ff6b35] hover:bg-[#ff6b35]/90 text-white hover:scale-105 hover:shadow-lg hover:shadow-[#ff6b35]/25'
+                        : 'bg-white/5 hover:bg-white/10 text-white border border-[#2a2a2a] hover:border-[#ff6b35]/30'
+                    }`}
+                  >
+                    {plan.cta}
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <p className="mt-8 text-xs text-[#777] max-w-3xl text-center mx-auto">
+          Storage and restore overages are billed fairly per GB. An S3-backed “maximum durability” upgrade is available for customers with stricter compliance or durability requirements.
+        </p>
       </div>
     </section>
   );

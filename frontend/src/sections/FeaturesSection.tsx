@@ -2,12 +2,12 @@ import { useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
-import { 
-  RefreshCw, 
-  Shield, 
-  Clock, 
-  Users, 
-  GitBranch
+import {
+  RefreshCw,
+  Shield,
+  Clock,
+  Users,
+  GitBranch,
 } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -15,23 +15,27 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 const features = [
   {
     icon: Shield,
-    title: 'Immutable Revisions',
-    description: 'Content-addressed by BLAKE3 hash. Every revision is verifiable and tamper-evident.',
+    title: 'Restore confidence',
+    description:
+      'Every backup is encrypted, verified, and tied to a specific point in time, so you always know exactly what you are restoring.',
   },
   {
     icon: Clock,
-    title: 'Instant Restore',
-    description: 'Restore any revision fast. Point-in-time recovery for Postgres with WAL archiving.',
+    title: 'History, not just snapshots',
+    description:
+      'Git-style revision history for your data. Browse changes, pick a revision, and restore without guessing which dump is safe.',
   },
   {
     icon: Users,
-    title: 'Team Visibility',
-    description: 'Share databases across the team with roles, audit history, and safe restores.',
+    title: 'Cheaper than managed markups',
+    description:
+      'Keep your own database and infra. Lunchbox gives you the safety net you expect from managed providers, without their premiums.',
   },
   {
     icon: GitBranch,
-    title: 'CI/CD Native',
-    description: 'GitHub Actions integration. Backup before migrations, sync after deploys.',
+    title: 'PQ encryption when you need it',
+    description:
+      'Hybrid post-quantum encryption for long-lived backups and compliance-sensitive workloads, without changing your application code.',
   },
 ];
 
@@ -152,10 +156,10 @@ export function FeaturesSection() {
         {/* Section Header */}
         <div ref={headerRef} className="text-center mb-16 lg:mb-24">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-semibold text-white mb-4">
-            Built for <span className="text-[#ff6b35]">developers</span>
+            Git for self-hosted databases
           </h2>
           <p className="text-lg text-[#a0a0a0] max-w-2xl mx-auto">
-            A clean API on top of durable object storage, without the setup pain
+            Backups, restore, and history for SQLite and Postgres you already run yourself.
           </p>
         </div>
 
@@ -196,13 +200,13 @@ export function FeaturesSection() {
                   <div className="w-14 h-14 rounded-xl bg-[#ff6b35]/10 border border-[#ff6b35]/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                     <RefreshCw className="w-7 h-7 text-[#ff6b35]" />
                   </div>
-                  
+
                   <h3 className="text-2xl lg:text-3xl font-display font-semibold text-white mb-4">
-                    One-Command Sync
+                    The safety layer for your database
                   </h3>
-                  
+
                   <p className="text-[#a0a0a0] mb-8 leading-relaxed">
-                    Sync your database with a single command. We handle deduplication, compression, encryption, and the object store behind the scenes.
+                    Keep your database and hosting exactly as they are. Lunchbox adds automatic, encrypted backups, point-in-time restores, and revision history on top.
                   </p>
 
                   {/* Code Block */}

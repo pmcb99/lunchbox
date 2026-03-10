@@ -3,23 +3,23 @@ import { Github, Twitter, MessageCircle } from 'lucide-react';
 
 export function Footer() {
   const productLinks = [
-    { label: 'Features', href: '/#features' },
-    { label: 'Pricing', href: '/#pricing' },
-    { label: 'Changelog', href: '#' },
-    { label: 'Roadmap', href: '#' },
+    { label: 'Features', href: '/features' },
+    { label: 'Pricing', href: '/pricing' },
+    { label: 'Changelog', href: '/' },
+    { label: 'Roadmap', href: '/' },
   ];
 
   const resourceLinks = [
     { label: 'Documentation', href: '/docs' },
-    { label: 'API Reference', href: '/docs#api-reference' },
+    { label: 'API Reference', href: '/docs' },
     { label: 'GitHub', href: 'https://github.com' },
-    { label: 'Blog', href: '#' },
+    { label: 'Blog', href: '/' },
   ];
 
   const legalLinks = [
-    { label: 'Privacy Policy', href: '#' },
-    { label: 'Terms of Service', href: '#' },
-    { label: 'Security', href: '#' },
+    { label: 'Privacy Policy', href: '/' },
+    { label: 'Terms of Service', href: '/' },
+    { label: 'Security', href: '/' },
   ];
 
   return (
@@ -40,7 +40,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-[#a0a0a0] text-sm max-w-xs mb-6">
-              Developer-first database backups. Immutable, content-addressed revisions with one-command sync.
+              Backups, restore, and history for self-hosted databases. Keep your own infra; let Lunchbox handle the safety layer.
             </p>
             <div className="flex items-center gap-4">
               <a

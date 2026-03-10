@@ -31,10 +31,10 @@ export function Navbar({ scrolled }: NavbarProps) {
   }, [lastScrollY]);
 
   const navLinks = [
-    { label: 'Features', href: '/#features' },
-    { label: 'How It Works', href: '/#how-it-works' },
+    { label: 'Features', href: '/features' },
+    { label: 'How It Works', href: '/how-it-works' },
     { label: 'Docs', href: '/docs' },
-    { label: 'Pricing', href: '/#pricing' },
+    { label: 'Pricing', href: '/pricing' },
   ];
 
   return (

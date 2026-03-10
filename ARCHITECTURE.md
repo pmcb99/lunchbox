@@ -5,7 +5,7 @@ This document describes what is currently implemented in this repository (not th
 ## 1) Backend API Spec (Current Implementation)
 
 ## Runtime and base URL
-- Backend framework: FastAPI
+- Backend framework: Go (`backend-go`)
 - Mounted API prefix: `/api/v1`
 - Effective base URL in frontend dev: `http://localhost:8000/api/v1`
 
@@ -265,8 +265,8 @@ All implemented Lunchbox endpoints return:
 ```
 
 ## Important scope note
-- Only `backend/app/api/api_v1/endpoints/lunchbox.py` is mounted under `/api/v1`.
-- Additional template routes under `backend/app/api/routes/*` exist in the repo but are not wired into the running app.
+- The active backend implementation lives in `backend-go/internal/app/server.go`.
+- The old FastAPI backend has been removed.
 
 ## 2) Frontend UX Flow (What users can achieve right now)
 
@@ -335,7 +335,7 @@ All implemented Lunchbox endpoints return:
 - No pagination/filtering for list endpoints.
 - No restore endpoints, no schedule mutation endpoints, and no audit/event endpoints in current implementation.
 - Revision creation for non-import flow uses placeholder size/checksum values instead of actual snapshot metadata.
-- Error model is inconsistent with plan (FastAPI `detail` errors rather than canonical `error` envelope).
+- Error model is inconsistent with plan (compatibility mode still returns `detail` errors rather than canonical `error` envelope).
 
 ## Frontend UX shortcomings
 - Login UX is demo-only and effectively a signup call with hardcoded credentials.

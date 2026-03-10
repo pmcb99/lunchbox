@@ -13,35 +13,43 @@ gsap.registerPlugin(ScrollTrigger);
 const faqs = [
   {
     question: 'What databases does Lunchbox support?',
-    answer: 'Lunchbox currently supports SQLite and PostgreSQL. MySQL support is coming in Q2 2026.',
+    answer:
+      'Lunchbox supports self-hosted SQLite today, with PostgreSQL backup and restore designed for teams that want a safer operational workflow without changing providers.',
   },
   {
     question: 'Can I self-host Lunchbox?',
-    answer: 'Yes. Lunchbox is designed to be self-hostable from day one. Run the control plane on your own infrastructure and point backups at your own S3, R2, or GCS bucket (BYOB).',
+    answer:
+      'Yes. Lunchbox is designed to be self-hostable. Run the control plane on your own infrastructure and point backups at your own S3-compatible bucket (BYOB).',
   },
   {
     question: 'How does the pricing work?',
-    answer: 'Self-hosted: you run the software and use your own storage (S3, R2, GCS). Managed: a platform fee plus usage; storage includes a GB-month allowance with overages on deduped storage and restore history.',
+    answer:
+      'You pay for protected databases, retention, and included managed backup storage if you choose a managed plan. BYOB plans let you use your own bucket and pay Lunchbox for the software and control layer.',
   },
   {
     question: 'Why not just use S3 + Litestream?',
-    answer: 'You can. Lunchbox exists to remove the multi-key, multi-bucket setup and give you one secure place to manage backups, retention, and restores without living in cloud IAM.',
+    answer:
+      'You can. Lunchbox is for teams that want a better developer experience, simpler restore flows, revision history, encryption defaults, and less backup glue code to maintain.',
   },
   {
     question: 'Is my data secure?',
-    answer: 'Yes. All revisions are encrypted at rest and transmitted over TLS 1.3. With client-side encryption enabled, we can\'t read your data.',
+    answer:
+      'Yes. Backups are encrypted in transit and at rest. BYOB plans support client-side encryption. Optional hybrid post-quantum encryption is available for long-lived backups.',
   },
   {
     question: 'Can I restore to a specific point in time?',
-    answer: 'Yes, for PostgreSQL with continuous WAL archiving enabled (managed or self-hosted). SQLite supports revision-based restore.',
+    answer:
+      'Yes. Lunchbox is designed to let you restore to a known revision or point in time, depending on the database workflow and retention configuration.',
   },
   {
     question: 'Do you offer team collaboration?',
-    answer: 'Yes. Team features include roles and audit history. SSO and SCIM are available for enterprise support plans.',
+    answer:
+      'Yes. Team features are included on Team and Business plans, with stronger audit and operational controls on higher tiers.',
   },
   {
     question: 'Do you support enterprise requirements?',
-    answer: 'Yes. We can support SSO/SCIM, custom retention, security reviews, and support contracts while keeping the core product developer-first.',
+    answer:
+      'Yes. Contact us for S3-backed maximum durability storage, custom retention requirements, support expectations, and compliance-sensitive deployments.',
   },
 ];
 

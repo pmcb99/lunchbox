@@ -1,21 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
-import { 
-  Search, 
-  Menu, 
-  X, 
+import type { ReactNode } from 'react';
+import {
+  Search,
+  Menu,
+  X,
   ChevronRight,
   Copy,
   Check,
-  ExternalLink,
-  Database,
-  Terminal,
   Settings,
-  Cloud,
   RefreshCw,
-  Code,
   Shield,
   Zap,
-  Users
+  Server,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -30,13 +26,12 @@ interface NavItem {
 
 const navigation: NavItem[] = [
   {
-    title: 'Start here',
-    href: '#start-here',
+    title: 'Quick start',
+    href: '#quick-start',
     icon: Zap,
     children: [
-      { title: 'Install', href: '#install' },
-      { title: 'First backup', href: '#first-backup' },
-      { title: 'Restore', href: '#restore' },
+      { title: 'Installation', href: '#installation' },
+      { title: 'Commands', href: '#commands' },
     ],
   },
   {
@@ -44,104 +39,38 @@ const navigation: NavItem[] = [
     href: '#security',
     icon: Shield,
     children: [
-      { title: 'Encryption model', href: '#encryption-model' },
-      { title: 'Post-quantum mode', href: '#post-quantum' },
-      { title: 'Key management', href: '#key-management' },
-      { title: 'Threat model', href: '#threat-model' },
+      { title: 'Transport security', href: '#transport-security' },
+      { title: 'Payload encryption', href: '#payload-encryption' },
+      { title: 'Integrity and secrets', href: '#integrity-secrets' },
     ],
   },
   {
-    title: 'Managed tiers',
-    href: '#managed-tiers',
-    icon: Cloud,
+    title: 'Architecture',
+    href: '#architecture',
+    icon: Server,
     children: [
-      { title: 'Maximum durability', href: '#managed-maximum' },
-      { title: 'Best value (EU)', href: '#managed-best-value' },
-      { title: 'BYOB', href: '#byob' },
+      { title: 'CLI', href: '#cli-responsibilities' },
+      { title: 'Server', href: '#server-responsibilities' },
+      { title: 'Local state', href: '#state-model' },
     ],
   },
   {
-    title: 'Reliability & limits',
-    href: '#reliability-limits',
+    title: 'Sync flow',
+    href: '#sync-flow',
     icon: RefreshCw,
     children: [
-      { title: 'Coverage', href: '#reliability-coverage' },
-      { title: 'Provider availability', href: '#provider-availability' },
-      { title: 'Restore safeguards', href: '#restore-safeguards' },
+      { title: 'Registration', href: '#registration' },
+      { title: 'Snapshot backup', href: '#snapshot-backup' },
+      { title: 'Continuous sync', href: '#continuous-sync' },
+      { title: 'Restore', href: '#restore-flow' },
     ],
   },
   {
-    title: 'Core Concepts',
-    href: '#core-concepts',
-    icon: Database,
-    children: [
-      { title: 'Revisions', href: '#revisions' },
-      { title: 'Head & Pointers', href: '#head-pointers' },
-      { title: 'WAL-aware Sync', href: '#wal-aware' },
-      { title: 'Content Deduplication', href: '#content-dedupe' },
-    ],
-  },
-  {
-    title: 'Sync Operations',
-    href: '#sync-operations',
-    icon: Cloud,
-    children: [
-      { title: 'SQLite', href: '#sqlite' },
-      { title: 'PostgreSQL', href: '#postgresql' },
-      { title: 'Dry Run', href: '#dry-run' },
-      { title: 'Scheduling', href: '#scheduling' },
-    ],
-  },
-  {
-    title: 'Team & Audit',
-    href: '#team-audit',
-    icon: Users,
-    children: [
-      { title: 'Roles', href: '#roles' },
-      { title: 'Audit history', href: '#audit-history' },
-    ],
-  },
-  {
-    title: 'Restore Operations',
-    href: '#restore',
-    icon: Terminal,
-    children: [
-      { title: 'List Revisions', href: '#list-revisions' },
-      { title: 'Restore to File', href: '#restore-file' },
-      { title: 'Restore to Postgres', href: '#restore-postgres' },
-      { title: 'Point-in-time Recovery', href: '#pitr' },
-    ],
-  },
-  {
-    title: 'CI/CD Integration',
-    href: '#cicd',
-    icon: Code,
-    children: [
-      { title: 'GitHub Actions', href: '#github-actions' },
-      { title: 'Pre-deploy Hooks', href: '#pre-deploy' },
-    ],
-  },
-  {
-    title: 'Self-Hosting',
-    href: '#self-hosting',
+    title: 'Reference',
+    href: '#reference',
     icon: Settings,
     children: [
-      { title: 'Requirements', href: '#requirements' },
-      { title: 'Docker Compose', href: '#docker-compose' },
-      { title: 'Configuration', href: '#config-reference' },
-      { title: 'Initial Setup', href: '#initial-setup' },
-    ],
-  },
-  {
-    title: 'API Reference',
-    href: '#api-reference',
-    icon: Shield,
-    children: [
-      { title: 'Authentication', href: '#auth' },
-      { title: 'Sync (Upload)', href: '#api-sync' },
-      { title: 'Restore (Download)', href: '#api-restore' },
-      { title: 'List Revisions', href: '#api-list' },
-      { title: 'Delete Revision', href: '#api-delete' },
+      { title: 'v1 scope', href: '#v1-scope' },
     ],
   },
 ];
@@ -195,15 +124,15 @@ function CodeBlock({ code, language = 'bash' }: { code: string; language?: strin
   );
 }
 
-function DocSection({ 
-  id, 
-  title, 
-  children, 
-  description 
-}: { 
-  id: string; 
-  title: string; 
-  children: React.ReactNode;
+function DocSection({
+  id,
+  title,
+  children,
+  description,
+}: {
+  id: string;
+  title: string;
+  children: ReactNode;
   description?: string;
 }) {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -233,7 +162,6 @@ export function DocsPage() {
   const mainRef = useRef<HTMLDivElement>(null);
 
   const handleAnchorClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    // Only handle in-page hash links
     if (!href.includes('#')) return;
 
     const [, hash] = href.split('#');
@@ -245,7 +173,6 @@ export function DocsPage() {
     if (element) {
       event.preventDefault();
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      // Keep the URL hash in sync without adding a new history entry
       if (window.location.hash !== `#${targetId}`) {
         history.replaceState(null, '', `#${targetId}`);
       }
@@ -253,10 +180,9 @@ export function DocsPage() {
     }
   };
 
-  // Track active section on scroll
   useEffect(() => {
     const sections = document.querySelectorAll('[id]');
-    
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -273,19 +199,21 @@ export function DocsPage() {
     return () => observer.disconnect();
   }, []);
 
-  const filteredNav = navigation.map((item) => ({
-    ...item,
-    children: item.children?.filter((child) =>
-      child.title.toLowerCase().includes(searchQuery.toLowerCase())
-    ),
-  })).filter((item) => 
-    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (item.children && item.children.length > 0)
-  );
+  const filteredNav = navigation
+    .map((item) => ({
+      ...item,
+      children: item.children?.filter((child) =>
+        child.title.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+    }))
+    .filter(
+      (item) =>
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (item.children && item.children.length > 0)
+    );
 
   return (
     <div className="min-h-screen bg-black pt-20">
-      {/* Mobile Sidebar Toggle */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
         className="lg:hidden fixed bottom-6 right-6 z-50 w-12 h-12 bg-[#ff6b35] rounded-full flex items-center justify-center shadow-lg"
@@ -295,7 +223,6 @@ export function DocsPage() {
 
       <div className="max-w-[1600px] mx-auto">
         <div className="flex">
-          {/* Sidebar */}
           <aside
             className={`fixed lg:sticky top-20 left-0 z-40 w-72 h-[calc(100vh-80px)] bg-black/95 lg:bg-black border-r border-[#2a2a2a] transform transition-transform duration-300 lg:transform-none ${
               sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
@@ -303,7 +230,6 @@ export function DocsPage() {
           >
             <ScrollArea className="h-full">
               <div className="p-6">
-                {/* Search */}
                 <div className="relative mb-6">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666]" />
                   <Input
@@ -315,7 +241,6 @@ export function DocsPage() {
                   />
                 </div>
 
-                {/* Navigation */}
                 <nav className="space-y-1">
                   {filteredNav.map((item) => (
                     <div key={item.href} className="mb-4">
@@ -357,637 +282,229 @@ export function DocsPage() {
             </ScrollArea>
           </aside>
 
-          {/* Main Content */}
           <main ref={mainRef} className="flex-1 min-w-0">
             <div className="max-w-4xl mx-auto px-6 py-12 lg:py-16">
-              {/* Page Header */}
               <div className="mb-12">
                 <div className="flex items-center gap-2 text-sm text-[#666] mb-4">
                   <span>Documentation</span>
                   <ChevronRight className="w-4 h-4" />
-                  <span className="text-[#a0a0a0]">Start here</span>
+                  <span className="text-[#a0a0a0]">v1.0</span>
                 </div>
                 <h1 className="text-4xl lg:text-5xl font-display font-semibold text-white mb-4">
                   Lunchbox Documentation
                 </h1>
                 <p className="text-xl text-[#a0a0a0] leading-relaxed">
-                  Git for your data: developer-first backups for SQLite and Postgres. One API key, immutable revisions, and instant restore with a self-hostable control plane.
+                  Lunchbox is a CLI tool for backing up SQLite databases — encrypted, resumable, and
+                  restorable with a single command.
                 </p>
+                <CodeBlock code={`$ lunchbox sync ~/mydb.sqlite`} />
               </div>
 
-              {/* Start Here */}
               <DocSection
-                id="start-here"
-                title="Start here"
-                description="Get encrypted backups running fast, then tune retention and storage as needed."
+                id="quick-start"
+                title="Quick start"
+                description="Get a SQLite database backed up and syncing in under a minute."
               >
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-5">
-                    <h4 className="text-base font-display font-medium text-white mb-2">Install</h4>
-                    <p className="text-sm text-[#a0a0a0]">Set up the CLI on your machine or CI runner.</p>
-                  </div>
-                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-5">
-                    <h4 className="text-base font-display font-medium text-white mb-2">First backup</h4>
-                    <p className="text-sm text-[#a0a0a0]">Encrypt, upload, and version your database in one command.</p>
-                  </div>
-                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-5">
-                    <h4 className="text-base font-display font-medium text-white mb-2">Restore</h4>
-                    <p className="text-sm text-[#a0a0a0]">Pull any revision or point-in-time snapshot.</p>
-                  </div>
-                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-5">
-                    <h4 className="text-base font-display font-medium text-white mb-2">Platform preview</h4>
-                    <p className="text-sm text-[#a0a0a0]">
-                      Use the demo sign-in to explore the UI at{' '}
-                      <a href="/platform" className="text-[#ff6b35] hover:underline">/platform</a>.
-                    </p>
-                  </div>
-                </div>
-                <p className="text-sm text-[#777] mt-6">
-                  Demo access uses a temporary login flow until full authentication ships.
-                </p>
-              </DocSection>
-
-              {/* First Backup */}
-              <DocSection 
-                id="first-backup" 
-                title="First backup (30 seconds)"
-                description="Encrypt before upload and create your first revision in under a minute."
-              >
-                <CodeBlock 
-                  code={`# 1. Install
-$ pipx install lunchbox
-
-# 2. Configure (once)
-$ echo "LUNCHBOX_API_KEY=lbk_live_xxx" > .env
-
-# 3. Sync
-$ lunchbox sync ./mydatabase.db`} 
+                <h3 id="installation" className="text-xl font-display font-medium text-white mb-4">Installation</h3>
+                <p className="text-[#a0a0a0] mb-2">Using the install script (macOS / Linux):</p>
+                <CodeBlock
+                  code={`$ curl -sSL https://raw.githubusercontent.com/pmcb99/lunchbox/main/install.sh | bash`}
                 />
-                <p className="text-[#a0a0a0] mt-4">
-                  Done. Your database is now versioned in the Lunchbox control plane at <code className="bg-[#1a1a1a] px-2 py-0.5 rounded text-sm">lunchbox.dev</code> → <strong>Databases</strong> → <strong>mydatabase.db</strong>.
-                </p>
-              </DocSection>
-
-              {/* Installation */}
-              <DocSection 
-                id="install" 
-                title="Install"
-                description="Install Lunchbox on macOS, Linux, or Windows."
-              >
-                <h3 className="text-xl font-display font-medium text-white mb-4">macOS / Linux</h3>
-                <CodeBlock 
-                  code={`$ pipx install lunchbox
-# or
-$ pip install lunchbox`} 
+                <p className="text-[#a0a0a0] mb-2">Homebrew:</p>
+                <CodeBlock
+                  code={`$ brew install lunchbox`}
                 />
-                
-                <h3 className="text-xl font-display font-medium text-white mb-4 mt-8">Verify Installation</h3>
-                <CodeBlock code={`$ lunchbox --version  # 0.8.x`} />
+                <p className="text-[#a0a0a0] mb-2">
+                  Or download a binary directly from the{' '}
+                  <a
+                    href="https://github.com/pmcb99/lunchbox/releases"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[#ff6b35] hover:underline"
+                  >
+                    releases page
+                  </a>
+                  .
+                </p>
+
+                <h3 id="commands" className="text-xl font-display font-medium text-white mb-4 mt-8">Commands</h3>
+                <CodeBlock
+                  code={`# Authenticate with your API key
+$ lunchbox login --api-key lb_live_xxx
+
+# Register a database and start syncing
+$ lunchbox sync ~/mydb.sqlite
+
+# Take a one-shot backup
+$ lunchbox backup ~/mydb.sqlite
+
+# Restore a database to a local file
+$ lunchbox restore <db-id> --output ~/restored.sqlite
+
+# Check sync status
+$ lunchbox status ~/mydb.sqlite
+
+# List all registered databases
+$ lunchbox list
+
+# Stop syncing a database
+$ lunchbox unlink ~/mydb.sqlite`}
+                />
               </DocSection>
 
-              {/* Security */}
               <DocSection
                 id="security"
                 title="Security"
-                description="Lunchbox encrypts data before upload and keeps keys in your control."
+                description="Lunchbox encrypts your data before it leaves your machine, with hybrid post-quantum key exchange protecting long-lived backups."
               >
-                <h3 id="encryption-model" className="text-xl font-display font-medium text-white mb-4">Encryption model</h3>
+                <h3 id="transport-security" className="text-xl font-display font-medium text-white mb-4">Transport security</h3>
                 <p className="text-[#a0a0a0] mb-6">
-                  Client-side encryption happens before data leaves your environment. Managed storage also supports server-side encryption at the object store layer.
+                  All connections use TLS 1.3. Post-quantum hybrid key exchange is negotiated
+                  automatically where the Go TLS stack supports it — no configuration required.
                 </p>
 
-                <h3 id="post-quantum" className="text-xl font-display font-medium text-white mb-4">Post-quantum mode</h3>
-                <p className="text-[#a0a0a0] mb-6">
-                  Lunchbox can enable post-quantum encryption for new revisions. When enabled, new backups are encrypted with PQ-safe algorithms for long-term data durability.
+                <h3 id="payload-encryption" className="text-xl font-display font-medium text-white mb-4">Payload encryption</h3>
+                <p className="text-[#a0a0a0] mb-4">
+                  Snapshots and incremental chunks are compressed and encrypted client-side before
+                  upload. Session keys are established using a hybrid post-quantum key exchange{' '}
+                  <span className="text-[#ff6b35] font-semibold">X25519+Kyber768</span>, so even if
+                  classical public-key algorithms are broken in future, previously captured
+                  ciphertext remains protected. The server receives and stores only ciphertext — it
+                  never has access to your plaintext data or encryption keys.
                 </p>
                 <CodeBlock
-                  code={`# Enable post-quantum encryption
-$ lunchbox sync ./mydatabase.db --pq-encryption`}
+                  code={`# Authenticate once — credentials are stored locally with restricted permissions
+$ lunchbox login --api-key lb_live_xxx
+
+# All data is encrypted before it leaves your machine
+$ lunchbox sync ~/mydb.sqlite`}
                 />
 
-                <h3 id="key-management" className="text-xl font-display font-medium text-white mb-4">Key management</h3>
-                <p className="text-[#a0a0a0] mb-6">
-                  Bring-your-own key (BYOK) or generate keys locally. Keys never need to be shared with Lunchbox for client-side encryption.
-                </p>
-
-                <h3 id="threat-model" className="text-xl font-display font-medium text-white mb-4">Threat model</h3>
+                <h3 id="integrity-secrets" className="text-xl font-display font-medium text-white mb-4">Integrity and secrets</h3>
                 <p className="text-[#a0a0a0] mb-4">
-                  We can see metadata (workspace, database name, sizes) but cannot read encrypted payloads when client-side encryption is enabled. You retain control of keys and restores.
+                  Every snapshot and chunk carries a content hash, key ID, nonce, generation ID,
+                  and sequence number. Chunk lineage is validated on the server at ingest — out-of-order
+                  or tampered uploads are rejected. Credentials, device identity, and encryption
+                  material are stored locally with restrictive file permissions.
                 </p>
               </DocSection>
 
-              {/* Managed Tiers */}
               <DocSection
-                id="managed-tiers"
-                title="Managed tiers"
-                description="Choose managed storage or bring your own bucket."
+                id="architecture"
+                title="Architecture"
+                description="Lunchbox separates local database work from backup coordination so developers can keep control of their data while using a managed or self-hosted backup service."
               >
-                <h3 id="managed-maximum" className="text-xl font-display font-medium text-white mb-4">Maximum durability</h3>
-                <p className="text-[#a0a0a0] mb-6">
-                  The maximum durability tier targets 99.999999999% durability and 99.99% availability.
-                </p>
-
-                <h3 id="managed-best-value" className="text-xl font-display font-medium text-white mb-4">Best value (EU)</h3>
-                <p className="text-[#a0a0a0] mb-6">
-                  The best value tier is Ceph-backed and supports server-side encryption plus object lock/versioning.
-                </p>
-
-                <h3 id="byob" className="text-xl font-display font-medium text-white mb-4">BYOB (any S3-compatible)</h3>
-                <p className="text-[#a0a0a0] mb-4">
-                  Point Lunchbox at any S3-compatible provider. You control storage pricing, regions, and policies.
-                </p>
-              </DocSection>
-
-              {/* Reliability & Limits */}
-              <DocSection
-                id="reliability-limits"
-                title="Reliability & limits"
-                description="What Lunchbox covers vs what your storage provider guarantees."
-              >
-                <h3 id="reliability-coverage" className="text-xl font-display font-medium text-white mb-4">What we cover</h3>
-                <p className="text-[#a0a0a0] mb-6">
-                  Lunchbox provides encryption, snapshot integrity, metadata availability, and restore tooling. Storage durability and availability are defined by your chosen backend.
-                </p>
-
-                <h3 id="provider-availability" className="text-xl font-display font-medium text-white mb-4">Provider network availability</h3>
-                <p className="text-[#a0a0a0] mb-6">
-                  The EU provider publishes a 99.9% annual average network availability commitment for its data centres. This is a network metric, not an object-storage-specific SLA.
-                </p>
-
-                <h3 id="restore-safeguards" className="text-xl font-display font-medium text-white mb-4">Restore safeguards</h3>
-                <p className="text-[#a0a0a0] mb-4">
-                  Restores can be throttled or paused to prevent surprise egress or compute costs, especially for large historical snapshots.
-                </p>
-              </DocSection>
-
-              {/* Configuration */}
-              <DocSection 
-                id="configuration" 
-                title="Configuration"
-                description="Lunchbox uses environment variables (auto-loaded from .env)."
-              >
-                <CodeBlock 
-                  language="env"
-                  code={`# Required
-LUNCHBOX_API_KEY=lbk_live_xxxxxxxxxxxxxxxxx
-
-# Optional
-LUNCHBOX_URL=https://lunchbox.dev           # For self-hosted
-LUNCHBOX_TIMEOUT_SECONDS=1200              # Large DBs
-LUNCHBOX_COMPRESS_GZIP=true                # Network optimization
-LUNCHBOX_TEMP_DIR=./.lunchbox/tmp          # Snapshot staging
-LUNCHBOX_PARALLEL_UPLOADS=4                # Upload concurrency
-
-# Postgres only
-DATABASE_URL=postgresql://user:pass@host:5432/dbname
-# or piecemeal:
-PGHOST=127.0.0.1
-PGPORT=5432
-PGUSER=postgres
-PGPASSWORD=secret
-PGDATABASE=production`} 
-                />
-
-                <h3 className="text-xl font-display font-medium text-white mb-4 mt-8">Multiple Environments</h3>
-                <CodeBlock 
-                  code={`# Production
-$ lunchbox sync --env .env.production
-
-# Staging  
-$ lunchbox sync --env .env.staging`} 
-                />
-              </DocSection>
-
-              {/* Core Concepts */}
-              <DocSection 
-                id="core-concepts" 
-                title="Core Concepts"
-                description="Lunchbox treats databases like Git repositories."
-              >
+                <h3 id="cli-responsibilities" className="text-xl font-display font-medium text-white mb-4">CLI responsibilities</h3>
                 <div className="grid sm:grid-cols-2 gap-6 mt-6">
                   <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6">
-                    <h4 id="revisions" className="text-lg font-display font-medium text-white mb-2">
-                      Revisions
-                    </h4>
+                    <h4 className="text-lg font-display font-medium text-white mb-2">Inspection</h4>
                     <p className="text-[#a0a0a0] text-sm">
-                      Immutable snapshots (content-addressed by BLAKE3 hash)
+                      SQLite validation, path handling, and WAL-mode checks happen on the client before sync continues.
                     </p>
                   </div>
                   <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6">
-                    <h4 id="head-pointers" className="text-lg font-display font-medium text-white mb-2">
-                      Head
-                    </h4>
+                    <h4 className="text-lg font-display font-medium text-white mb-2">Replication</h4>
                     <p className="text-[#a0a0a0] text-sm">
-                      Pointer to latest revision per database
+                      The CLI creates consistent snapshots, captures incrementals, persists local resumable state, and uploads encrypted payloads.
+                    </p>
+                  </div>
+                </div>
+
+                <h3 id="server-responsibilities" className="text-xl font-display font-medium text-white mb-4 mt-8">Server responsibilities</h3>
+                <div className="grid sm:grid-cols-2 gap-6 mt-6">
+                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6">
+                    <h4 className="text-lg font-display font-medium text-white mb-2">Catalog and ingest</h4>
+                    <p className="text-[#a0a0a0] text-sm">
+                      The server owns auth, database registration, metadata in Postgres, object storage orchestration, chunk lineage validation, and audit events.
                     </p>
                   </div>
                   <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6">
-                    <h4 id="wal-aware" className="text-lg font-display font-medium text-white mb-2">
-                      WAL-aware
-                    </h4>
+                    <h4 className="text-lg font-display font-medium text-white mb-2">Restore planning</h4>
                     <p className="text-[#a0a0a0] text-sm">
-                      SQLite incremental syncs via WAL shipping
-                    </p>
-                  </div>
-                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6">
-                    <h4 id="content-dedupe" className="text-lg font-display font-medium text-white mb-2">
-                      Content Deduplication
-                    </h4>
-                    <p className="text-[#a0a0a0] text-sm">
-                      Identical blocks shared across revisions server-side
+                      Restore manifests, retention metadata, and restore-point planning belong to the server so the platform and CLI can reason over the same history.
                     </p>
                   </div>
                 </div>
-              </DocSection>
 
-              {/* Sync Operations */}
-              <DocSection 
-                id="sync-operations" 
-                title="Sync Operations"
-                description="Backup your databases with a single command."
-              >
-                <h3 id="sqlite" className="text-xl font-display font-medium text-white mb-4">SQLite</h3>
-                <CodeBlock 
-                  code={`# Basic (auto-detects WAL mode)
-$ lunchbox sync ./app.db
-
-# With explicit name override
-$ lunchbox sync ./data/app.db --name "production-app-v2"`} 
-                />
-                <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-4 mt-4">
-                  <p className="text-sm text-[#a0a0a0]">
-                    <strong className="text-white">WAL Handling:</strong> Automatically includes <code className="bg-black px-1.5 py-0.5 rounded">app.db-wal</code> and <code className="bg-black px-1.5 py-0.5 rounded">app.db-shm</code> if present. Takes atomic snapshot using SQLite Backup API (no locks on read).
-                  </p>
-                </div>
-
-                <h3 id="postgresql" className="text-xl font-display font-medium text-white mb-4 mt-8">PostgreSQL</h3>
-                <CodeBlock 
-                  code={`# Requires DATABASE_URL in .env
-$ lunchbox sync
-
-# Specific schema only
-$ lunchbox sync --schema public --schema analytics`} 
-                />
-                <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-4 mt-4">
-                  <p className="text-sm text-[#a0a0a0]">
-                    <strong className="text-white">Implementation:</strong> Uses <code className="bg-black px-1.5 py-0.5 rounded">pg_dump</code> (custom format) → streams to Lunchbox. Consistent snapshot via <code className="bg-black px-1.5 py-0.5 rounded">REPEATABLE READ</code> transaction.
-                  </p>
-                </div>
-
-                <h3 id="dry-run" className="text-xl font-display font-medium text-white mb-4 mt-8">Dry Run</h3>
-                <CodeBlock 
-                  code={`$ lunchbox sync --dry-run  # Shows what would upload, no data sent`} 
-                />
-
-                <h3 id="scheduling" className="text-xl font-display font-medium text-white mb-4 mt-8">Scheduling</h3>
-                <p className="text-[#a0a0a0] mb-4">
-                  Schedule backups with a cron expression. Use the same flags you would for sync.
-                </p>
-                <CodeBlock 
-                  code={`# Nightly at 03:00 UTC
-$ lunchbox schedule "0 3 * * *" --db ./mydatabase.db
-
-# Postgres
-$ lunchbox schedule "0 3 * * *" --db postgresql://localhost/app`} 
-                />
-              </DocSection>
-
-              {/* Team & Audit */}
-              <DocSection 
-                id="team-audit" 
-                title="Team & audit"
-                description="Collaborate safely with roles and an audit trail of backup activity."
-              >
-                <h3 id="roles" className="text-xl font-display font-medium text-white mb-4">Roles</h3>
-                <p className="text-[#a0a0a0] mb-6">
-                  Manage access with roles like owner, admin, and read-only. Roles control who can create restores, change retention, and manage API keys.
-                </p>
-
-                <h3 id="audit-history" className="text-xl font-display font-medium text-white mb-4">Audit history</h3>
-                <p className="text-[#a0a0a0] mb-4">
-                  Every sync, restore, and retention change is logged with actor, timestamp, and metadata for traceability.
-                </p>
-              </DocSection>
-
-              {/* Restore Operations */}
-              <DocSection 
-                id="restore" 
-                title="Restore"
-                description="Restore is the inverse of sync—pull any revision to local disk or directly to a running Postgres instance."
-              >
-                <h3 id="list-revisions" className="text-xl font-display font-medium text-white mb-4">List Available Revisions</h3>
-                <CodeBlock 
-                  code={`# SQLite
-$ lunchbox revisions ./app.db
-
-# Postgres  
-$ lunchbox revisions --db production-db`} 
-                />
-                <div className="bg-[#0a0a0a] border border-[#2a2a2a] rounded-xl p-4 mt-4 font-mono text-sm">
-                  <div className="text-[#666] mb-2">REVISION    TIMESTAMP           SIZE      CHECKSUM</div>
-                  <div className="text-[#a0a0a0]">rev_abc123  2026-02-02 10:00    45MB      b3a2f1...</div>
-                  <div className="text-white">rev_def456  2026-02-02 09:00    44MB      c8d9e2...  (latest)</div>
-                </div>
-
-                <h3 id="restore-file" className="text-xl font-display font-medium text-white mb-4 mt-8">Restore to File (SQLite)</h3>
-                <CodeBlock 
-                  code={`# Latest
-$ lunchbox restore ./app.db --output ./app-restored.db
-
-# Specific revision
-$ lunchbox restore ./app.db --rev rev_abc123 --output ./app-yesterday.db
-
-# In-place (destructive—backs up current first)
-$ lunchbox restore ./app.db --in-place --rev rev_abc123`} 
-                />
-
-                <h3 id="restore-postgres" className="text-xl font-display font-medium text-white mb-4 mt-8">Restore to Postgres</h3>
-                <CodeBlock 
-                  code={`# Restore to new database
-$ lunchbox restore production-db --target-db postgresql://localhost/restored_db
-
-# Restore in-place (drops & recreates)
-$ lunchbox restore production-db --in-place --rev rev_abc123
-
-# Restore to existing (merge schema—risky, warns)
-$ lunchbox restore production-db --into-existing --schema-only`} 
-                />
-
-                <h3 id="pitr" className="text-xl font-display font-medium text-white mb-4 mt-8">Point-in-Time Recovery (Postgres)</h3>
-                <p className="text-[#a0a0a0] mb-4">
-                  When using continuous WAL archiving (managed or self-hosted):
-                </p>
-                <CodeBlock 
-                  code={`$ lunchbox restore production-db --timestamp "2026-02-02 09:30:00"`} 
-                />
-              </DocSection>
-
-              {/* CI/CD */}
-              <DocSection 
-                id="cicd" 
-                title="CI/CD Integration"
-                description="Integrate Lunchbox into your deployment pipeline."
-              >
-                <h3 id="github-actions" className="text-xl font-display font-medium text-white mb-4">GitHub Actions</h3>
-                <CodeBlock 
-                  language="yaml"
-                  code={`- name: Backup DB before migration
-  uses: lunchbox-dev/action@v1
-  with:
-    api-key: \${{ secrets.LUNCHBOX_API_KEY }}
-    database: postgresql://localhost/app
-    name: "pre-migration-\${{ github.sha }}"
-
-- name: Run migrations
-  run: alembic upgrade head
-
-- name: Sync post-migration state
-  run: lunchbox sync
-  env:
-    LUNCHBOX_API_KEY: \${{ secrets.LUNCHBOX_API_KEY }}`} 
-                />
-
-                <h3 id="pre-deploy" className="text-xl font-display font-medium text-white mb-4 mt-8">Pre-deploy Hooks</h3>
-                <CodeBlock 
-                  code={`#!/bin/bash
-# deploy.sh
-lunchbox sync --name "release-$(git describe --tags)"
-# ... deploy code ...`} 
-                />
-              </DocSection>
-
-              {/* Self-Hosting */}
-              <DocSection 
-                id="self-hosting" 
-                title="Self-Hosting"
-                description="Deploy your own Lunchbox instance for air-gapped or compliance requirements."
-              >
-                <h3 id="requirements" className="text-xl font-display font-medium text-white mb-4">Requirements</h3>
-                <ul className="list-disc list-inside text-[#a0a0a0] space-y-2 mb-6">
-                  <li>Docker 24+</li>
-                  <li>S3-compatible storage (MinIO, AWS S3, GCS)</li>
-                  <li>Postgres 15+ (for metadata)</li>
-                  <li>Redis 7+ (for job queues)</li>
-                </ul>
-
-                <h3 id="docker-compose" className="text-xl font-display font-medium text-white mb-4">Docker Compose</h3>
-                <CodeBlock 
-                  language="yaml"
-                  code={`version: '3.8'
-services:
-  lunchbox:
-    image: lunchbox/lunchbox:v0.8.0
-    ports:
-      - "8080:8080"
-    environment:
-      DATABASE_URL: postgresql://lunchbox:secret@postgres:5432/lunchbox
-      STORAGE_TYPE: s3
-      S3_ENDPOINT: http://minio:9000
-      S3_BUCKET: lunchbox-backups
-      S3_ACCESS_KEY: minioadmin
-      S3_SECRET_KEY: minioadmin
-      JWT_SECRET: your-random-secret-here
-      API_KEY_SALT: another-random-string
-      ENABLE_GZIP: "true"
-      MAX_UPLOAD_SIZE: 50GB
-    depends_on:
-      - postgres
-      - redis
-      - minio
-
-  postgres:
-    image: postgres:15-alpine
-    environment:
-      POSTGRES_USER: lunchbox
-      POSTGRES_PASSWORD: secret
-      POSTGRES_DB: lunchbox
-
-  redis:
-    image: redis:7-alpine
-
-  minio:
-    image: minio/minio
-    command: server /data --console-address ":9001"
-    environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin`} 
-                />
-
-                <h3 id="config-reference" className="text-xl font-display font-medium text-white mb-4 mt-8">Configuration Reference</h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-[#2a2a2a]">
-                        <th className="text-left py-3 px-4 text-white font-medium">Variable</th>
-                        <th className="text-left py-3 px-4 text-white font-medium">Description</th>
-                        <th className="text-left py-3 px-4 text-white font-medium">Default</th>
-                      </tr>
-                    </thead>
-                    <tbody className="text-[#a0a0a0]">
-                      <tr className="border-b border-[#2a2a2a]/50">
-                        <td className="py-3 px-4 font-mono text-[#ff6b35]">PORT</td>
-                        <td className="py-3 px-4">HTTP server port</td>
-                        <td className="py-3 px-4 font-mono">8080</td>
-                      </tr>
-                      <tr className="border-b border-[#2a2a2a]/50">
-                        <td className="py-3 px-4 font-mono text-[#ff6b35]">DATABASE_URL</td>
-                        <td className="py-3 px-4">Postgres connection</td>
-                        <td className="py-3 px-4">Required</td>
-                      </tr>
-                      <tr className="border-b border-[#2a2a2a]/50">
-                        <td className="py-3 px-4 font-mono text-[#ff6b35]">STORAGE_TYPE</td>
-                        <td className="py-3 px-4">s3, gcs, azure, local</td>
-                        <td className="py-3 px-4 font-mono">local</td>
-                      </tr>
-                      <tr className="border-b border-[#2a2a2a]/50">
-                        <td className="py-3 px-4 font-mono text-[#ff6b35]">MAX_REVISIONS_PER_DB</td>
-                        <td className="py-3 px-4">Retention limit</td>
-                        <td className="py-3 px-4 font-mono">0 (unlimited)</td>
-                      </tr>
-                      <tr>
-                        <td className="py-3 px-4 font-mono text-[#ff6b35]">ENCRYPTION_KEY</td>
-                        <td className="py-3 px-4">AES-256 master key</td>
-                        <td className="py-3 px-4">Generate random</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <h3 id="initial-setup" className="text-xl font-display font-medium text-white mb-4 mt-8">Initial Setup</h3>
-                <CodeBlock 
-                  code={`# 1. Start infrastructure
-$ docker-compose up -d postgres redis minio
-
-# 2. Run migrations
-$ docker-compose run --rm lunchbox migrate
-
-# 3. Create admin user
-$ docker-compose run --rm lunchbox create-user --admin admin@example.com
-
-# 4. Start platform
-$ docker-compose up -d lunchbox`} 
-                />
-                <p className="text-[#a0a0a0] mt-4">
-                  Access at <code className="bg-[#1a1a1a] px-2 py-0.5 rounded text-sm">http://localhost:8080</code>. First login with the admin credentials created in step 3.
-                </p>
-              </DocSection>
-
-              {/* API Reference */}
-              <DocSection 
-                id="api-reference" 
-                title="API Reference"
-                description="RESTful API for programmatic access."
-              >
-                <h3 id="auth" className="text-xl font-display font-medium text-white mb-4">Authentication</h3>
-                <p className="text-[#a0a0a0] mb-4">
-                  All requests require <code className="bg-[#1a1a1a] px-2 py-0.5 rounded text-sm">Authorization: Bearer lbk_live_xxx</code> header.
-                </p>
-
-                <h3 id="api-sync" className="text-xl font-display font-medium text-white mb-4 mt-8">Sync (Upload)</h3>
-                <CodeBlock 
-                  language="http"
-                  code={`POST /api/v1/databases/{db_name}/revisions
-Content-Type: multipart/form-data
-Authorization: Bearer lbk_live_xxx
-
-# SQLite: upload .db file + optional .db-wal
-# Postgres: triggers server-side pg_dump`} 
-                />
-
-                <h3 id="api-restore" className="text-xl font-display font-medium text-white mb-4 mt-8">Restore (Download)</h3>
-                <CodeBlock 
-                  language="http"
-                  code={`GET /api/v1/databases/{db_name}/revisions/{rev_id}/download
-Authorization: Bearer lbk_live_xxx
-
-# Returns: application/octet-stream`} 
-                />
-
-                <h3 id="api-list" className="text-xl font-display font-medium text-white mb-4 mt-8">List Revisions</h3>
-                <CodeBlock 
-                  language="http"
-                  code={`GET /api/v1/databases/{db_name}/revisions
-Authorization: Bearer lbk_live_xxx`} 
-                />
-                <CodeBlock 
+                <h3 id="state-model" className="text-xl font-display font-medium text-white mb-4 mt-8">State model</h3>
+                <CodeBlock
                   language="json"
                   code={`{
-  "database": "app.db",
-  "head": "rev_def456",
-  "revisions": [
-    {
-      "id": "rev_def456",
-      "created_at": "2026-02-02T09:00:00Z",
-      "size_bytes": 46137344,
-      "checksum": "b3a2f1...",
-      "metadata": {"source": "cli", "host": "server-01"}
-    }
-  ]
-}`} 
-                />
-
-                <h3 id="api-delete" className="text-xl font-display font-medium text-white mb-4 mt-8">Delete Revision</h3>
-                <CodeBlock 
-                  language="http"
-                  code={`DELETE /api/v1/databases/{db_name}/revisions/{rev_id}
-Authorization: Bearer lbk_live_xxx
-
-# Soft delete (archived for 30 days, then purged)`} 
+  "db_id": "db_123",
+  "path": "/Users/paul/mydb.sqlite",
+  "generation": "gen_abc",
+  "last_uploaded_seq": 10293,
+  "last_snapshot_id": "snap_789",
+  "encryption_key_id": "key_1",
+  "device_id": "dev_123"
+}`}
                 />
               </DocSection>
 
-              {/* Footer */}
-              <div className="mt-16 pt-8 border-t border-[#2a2a2a]">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <p className="text-[#666] text-sm">
-                    Need help? Join our{' '}
-                    <a href="#" className="text-[#ff6b35] hover:underline">Discord</a>
-                    {' '}or email{' '}
-                    <a href="mailto:support@lunchbox.dev" className="text-[#ff6b35] hover:underline">support@lunchbox.dev</a>
-                  </p>
-                  <a
-                    href="https://github.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-[#a0a0a0] hover:text-white transition-colors duration-200"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    Edit this page on GitHub
-                  </a>
+              <DocSection
+                id="sync-flow"
+                title="Sync flow"
+                description="A sync validates your database locally, establishes a consistent baseline snapshot, then keeps subsequent changes protected in the background."
+              >
+                <h3 id="registration" className="text-xl font-display font-medium text-white mb-4">Registration</h3>
+                <p className="text-[#a0a0a0] mb-6">
+                  On first sync, Lunchbox validates the SQLite file, enables WAL mode if needed,
+                  and registers the database with the server. This happens automatically — you
+                  only need to run <code className="bg-[#1a1a1a] px-2 py-0.5 rounded text-sm">lunchbox sync</code>.
+                </p>
+
+                <h3 id="snapshot-backup" className="text-xl font-display font-medium text-white mb-4">Snapshot backup</h3>
+                <p className="text-[#a0a0a0] mb-4">
+                  Lunchbox takes a consistent snapshot of the database, compresses and encrypts it
+                  client-side, and uploads it to your configured object storage. Each restore is
+                  automatically validated against the original data.
+                </p>
+                <CodeBlock
+                  code={`# One-shot snapshot backup
+$ lunchbox backup ~/mydb.sqlite
+
+# Restore to a local file
+$ lunchbox restore db_123 --output ~/restored.sqlite`}
+                />
+
+                <h3 id="continuous-sync" className="text-xl font-display font-medium text-white mb-4 mt-8">Continuous sync</h3>
+                <p className="text-[#a0a0a0] mb-6">
+                  Continuous sync tracks WAL changes, uploads ordered encrypted chunks, and
+                  persists local state so sync resumes automatically after interruption or restart.
+                  No data is lost between sessions.
+                </p>
+
+                <h3 id="restore-flow" className="text-xl font-display font-medium text-white mb-4">Restore</h3>
+                <p className="text-[#a0a0a0] mb-4">
+                  Restore writes to a local SQLite file and refuses to overwrite an existing file
+                  by default. Pass <code className="bg-[#1a1a1a] px-2 py-0.5 rounded text-sm">--force</code> to
+                  overwrite. The restored file is byte-for-byte consistent with the backed-up state.
+                </p>
+              </DocSection>
+
+              <DocSection
+                id="reference"
+                title="Reference"
+                description="What Lunchbox v1 covers and what's planned for later."
+              >
+                <h3 id="v1-scope" className="text-xl font-display font-medium text-white mb-4">v1 scope</h3>
+                <div className="grid sm:grid-cols-2 gap-6 mt-6">
+                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6">
+                    <h4 className="text-lg font-display font-medium text-white mb-2">Included in v1</h4>
+                    <p className="text-[#a0a0a0] text-sm">
+                      Go CLI, Go server, API key auth, SQLite registration and validation, one-shot backup, continuous sync, restore, resumable sync state, client-side encryption, S3-compatible blob storage, retention metadata, and observability.
+                    </p>
+                  </div>
+                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6">
+                    <h4 className="text-lg font-display font-medium text-white mb-2">Coming later</h4>
+                    <p className="text-[#a0a0a0] text-sm">
+                      Postgres support, full team and org management, billing, customer-managed encryption keys, high-availability replicas, and a dashboard UI.
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </DocSection>
             </div>
           </main>
-
-          {/* Right Sidebar - On This Page */}
-          <aside className="hidden xl:block w-64 sticky top-24 h-[calc(100vh-96px)]">
-            <ScrollArea className="h-full">
-              <div className="p-6">
-                <h4 className="text-sm font-medium text-[#666] mb-4 uppercase tracking-wider">
-                  On This Page
-                </h4>
-                <nav className="space-y-2">
-                  {navigation.flatMap(item => [
-                    { title: item.title, href: item.href, level: 0 },
-                    ...(item.children?.map(child => ({ ...child, level: 1 })) || [])
-                  ]).map((item) => (
-                    <a
-                      key={item.href}
-                      href={item.href}
-                      onClick={(event) => handleAnchorClick(event, item.href)}
-                      className={`block text-sm transition-colors duration-200 ${
-                        activeSection === item.href.slice(1)
-                          ? 'text-[#ff6b35]'
-                          : 'text-[#666] hover:text-[#a0a0a0]'
-                      } ${item.level === 1 ? 'pl-4' : ''}`}
-                    >
-                      {item.title}
-                    </a>
-                  ))}
-                </nav>
-              </div>
-            </ScrollArea>
-          </aside>
         </div>
       </div>
     </div>

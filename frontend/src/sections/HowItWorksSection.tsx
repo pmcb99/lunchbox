@@ -13,9 +13,9 @@ gsap.registerPlugin(ScrollTrigger);
 const steps = [
   {
     number: '01',
-    title: 'Install the CLI',
-    description: 'One-line installation with pipx. No dependencies, no configuration files.',
-    code: '$ pipx install lunchbox',
+    title: 'Connect your self-hosted database',
+    description: 'Install the Lunchbox CLI and point it at your existing SQLite file or Postgres connection string. Your application, hosting, and schema stay exactly as they are.',
+    code: '$ curl -sSL https://raw.githubusercontent.com/pmcb99/lunchbox/main/install.sh | bash\n$ lunchbox sync ./app.db    # or a Postgres URL',
     output: [
       '  installed package lunchbox 0.8.0, installed using Python 3.12',
       '  These apps are now globally available',
@@ -25,9 +25,9 @@ const steps = [
   },
   {
     number: '02',
-    title: 'Sync your database',
-    description: 'Single command sync. Automatic WAL detection for SQLite, streaming dumps for PostgreSQL.',
-    code: '$ lunchbox sync ./mydatabase.db\n$ lunchbox sync --db postgresql://localhost/app',
+    title: 'Take a safe, consistent backup',
+    description: 'Lunchbox inspects your database, takes a consistent snapshot, and uploads it encrypted to managed storage or your own S3-compatible bucket.',
+    code: '$ lunchbox backup ./app.db\n$ lunchbox backup --db postgresql://localhost/app',
     output: [
       '  Detected SQLite database (WAL mode enabled)',
       '  → Compressing... 45MB → 12MB',
@@ -62,17 +62,17 @@ const steps = [
   },
   {
     number: '03',
-    title: 'Meet your needs',
+    title: 'Capture revisions over time',
     description: (
       <>
         Turn on{' '}
         <span className="text-[#fbbf24] drop-shadow-[0_0_12px_rgba(248,113,113,0.6)] animate-pulse">
           post-quantum encryption
         </span>{' '}
-        or schedule backups with a single flag.
+        and schedule backups with a single flag. Lunchbox stores an immutable history of revisions so you can see how your data changed.
       </>
     ),
-    code: '$ lunchbox sync ./mydatabase.db --pq-encryption\n$ lunchbox schedule "0 3 * * *" --db ./mydatabase.db',
+    code: '$ lunchbox sync ./app.db --pq-encryption\n$ lunchbox schedule "0 3 * * *" --db ./app.db',
     output: [
       '  Post-quantum encryption enabled',
       '  ✓ Policy stored for new revisions',
@@ -114,9 +114,9 @@ const steps = [
   },
   {
     number: '04',
-    title: 'Restore fast',
-    description: 'Restore any revision to a file or directly to Postgres.',
-    code: '$ lunchbox restore ./mydatabase.db --rev rev_abc123 --output ./db-restored.db\n$ lunchbox restore app --target-db postgresql://localhost/restored_db',
+    title: 'Restore any point in time',
+    description: 'Choose a revision or point in time and restore to a local file or straight into Postgres. Rehearse restores in staging before you ever need them in production.',
+    code: '$ lunchbox restore ./app.db --rev rev_abc123 --output ./db-restored.db\n$ lunchbox restore app --target-db postgresql://localhost/restored_db',
     output: [
       '  Downloading revision rev_abc123',
       '  ✓ Restored to ./db-restored.db',
@@ -238,10 +238,10 @@ export function HowItWorksSection() {
         {/* Section Header */}
         <div ref={headerRef} className="text-center mb-16 lg:mb-24">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-semibold text-white mb-4">
-            Get started in <span className="text-[#ff6b35]">30 seconds</span>
+            How Lunchbox protects your self-hosted database
           </h2>
           <p className="text-lg text-[#a0a0a0] max-w-2xl mx-auto">
-            Four simple steps to version control your databases
+            Four simple steps: connect, back up, capture history, and restore.
           </p>
         </div>
 

@@ -37,31 +37,39 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const { hash } = location;
+    const { pathname } = location;
 
-    // If there's no hash, just scroll to the top on route change
-    if (!hash) {
-      window.scrollTo({ top: 0, left: 0 });
-      return;
-    }
-
-    const targetId = hash.slice(1);
-    if (!targetId) return;
-
-    const scrollToHash = () => {
-      const element = document.getElementById(targetId);
+    const scrollToId = (id: string) => {
+      const element = document.getElementById(id);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     };
 
-    // Try immediately in case the element is already rendered
-    scrollToHash();
-    // And schedule once after paint to catch elements that mount slightly later
-    const timeoutId = window.setTimeout(scrollToHash, 0);
+    // Map pretty paths to landing page sections
+    if (pathname === '/') {
+      window.scrollTo({ top: 0, left: 0 });
+      return;
+    }
 
-    return () => window.clearTimeout(timeoutId);
-  }, [location.pathname, location.hash]);
+    if (pathname === '/features') {
+      scrollToId('features');
+      return;
+    }
+
+    if (pathname === '/how-it-works') {
+      scrollToId('how-it-works');
+      return;
+    }
+
+    if (pathname === '/pricing') {
+      scrollToId('pricing');
+      return;
+    }
+
+    // Default: scroll to top on route change
+    window.scrollTo({ top: 0, left: 0 });
+  }, [location.pathname]);
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -69,6 +77,9 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/features" element={<LandingPage />} />
+          <Route path="/how-it-works" element={<LandingPage />} />
+          <Route path="/pricing" element={<LandingPage />} />
           <Route path="/docs" element={<DocsPage />} />
           <Route path="/platform/login" element={<PlatformLoginPage />} />
           <Route

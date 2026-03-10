@@ -213,14 +213,14 @@ export function CTASection() {
           ref={headingRef}
           className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-display font-semibold text-white mb-6"
         >
-          Ship backups without the <span className="text-[#ff6b35]">cloud maze.</span>
+          Self-host your DB. Let Lunchbox handle the safety net.
         </h2>
 
         <p
           ref={descriptionRef}
           className="text-lg lg:text-xl text-[#a0a0a0] max-w-2xl mx-auto mb-10"
         >
-          Use a self-hosted control plane or our managed service. Your data stays in durable object storage with a clean, developer-friendly API.
+          Point Lunchbox at your existing database, take your first backup, and rehearse a restore before production ever breaks. Keep your infra; gain restore confidence.
         </p>
 
         <div ref={ctaRef} className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -230,7 +230,7 @@ export function CTASection() {
             className="bg-[#ff6b35] hover:bg-[#ff6b35]/90 text-white px-10 py-7 text-lg font-medium rounded-xl transition-all duration-300 hover:scale-105 animate-pulse-glow"
           >
             <Link to="/platform">
-              Deploy or Get Started
+              Try your first restore
               <ArrowRight className="ml-2 w-5 h-5" />
             </Link>
           </Button>
@@ -239,7 +239,7 @@ export function CTASection() {
             to="/docs"
             className="text-[#a0a0a0] hover:text-white transition-colors duration-300 flex items-center gap-2 group"
           >
-            View Documentation
+            View docs
             <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </div>
